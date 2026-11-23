@@ -597,6 +597,24 @@
         background: #fff8f7;
       }
       .emergency-call b { color: #8f1d16; }
+      .emergency-call-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 18px;
+      }
+      .emergency-call-row p { margin-bottom: 0 !important; }
+      .call-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 112px;
+        min-height: 46px;
+        margin: 0;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .emergency-call-note { margin: 12px 0 0 !important; }
       .emergency-list { display: grid; gap: 8px; margin: 10px 0 14px; }
       .emergency-list label { display: flex; gap: 9px; align-items: flex-start; color: var(--mute); }
       .emergency-list input { accent-color: #b42318; margin-top: 4px; }
@@ -897,6 +915,13 @@
       }
 
 
+      @media (max-width: 420px) {
+        .emergency-call-row {
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+        .call-button { justify-self: end; }
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           animation: none !important;
@@ -925,9 +950,9 @@
             template reminders.
           </div>
           <div class="box">
-            <b>Simulated in this demo</b>The WhatsApp chat frame. The hospital
+            <b>WhatsApp interface simulation</b>The WhatsApp chat frame. The hospital
             app is a normal web page in a phone sheet (the CTA URL pattern), not
-            a native Flow. API data is mock until CFG.MOCK is set to false.
+            a native Flow. Service responses use the configured hospital API.
           </div>
         </div>
         <h3>Live API &amp; WhatsApp activity</h3>
@@ -936,9 +961,9 @@
           <label
             ><input type="checkbox" id="fail" /> Simulate server error on
             submit</label
-          ><button id="rs" type="button">Restart demo</button>
+          ><button id="rs" type="button">Restart interaction</button>
         </div>
-        <h3>Sample API responses</h3>
+        <h3>API examples</h3>
         <p>
           Pick any endpoint to see the request and the JSON the backend returns.
           The last three are WhatsApp Cloud API payloads.
@@ -946,7 +971,7 @@
         <select id="sx" aria-label="Choose an endpoint"></select>
         <pre id="sr" tabindex="0"></pre>
         <details class="fj" style="margin-top: 12px">
-          <summary>Sample WhatsApp Flow JSON (enquiry)</summary>
+          <summary>WhatsApp Flow JSON example (enquiry)</summary>
           <pre>
 {"version":"7.0","screens":[{"id":"ENQUIRY","title":"Patient enquiry","terminal":true,"layout":{"type":"SingleColumnLayout","children":[{"type":"Form","name":"form","children":[{"type":"TextInput","name":"patient","label":"Patient name","input-type":"text","required":true},{"type":"Dropdown","name":"dept","label":"Department","data-source":[{"id":"gyn","title":"Gynaecology"}]},{"type":"Footer","label":"Submit","on-click-action":{"name":"complete","payload":{"patient":"${form.patient}","dept":"${form.dept}"}}}]}]}}]}</pre
           >
@@ -1001,7 +1026,7 @@
         const [h, m] = t.split(":");
         return (h % 12 || 12) + ":" + m + (h < 12 ? " AM" : " PM");
       };
-      /* ---------- Sample data (served by the mock API) ---------- */
+      /* ---------- Service data (served by the API) ---------- */
       const URL_PARAMS = new URLSearchParams(window.location.search);
       const HOSTED_LAUNCH =
         URL_PARAMS.get("intent") === "hospital-demo" &&
@@ -1020,9 +1045,9 @@
       const PROFILE = {
         name: "Ishwarya Hospital",
         tagline: "Women's health & maternity care",
-        phone: "+91 00000 00000 (sample)",
-        address: "Sample address, to be provided by the hospital",
-        emergency: "Emergency desk (sample: 24x7)",
+        phone: "+91 89259 88682",
+        address: "Call reception for directions.",
+        emergency: "For urgent assistance, call 112.",
       };
       const DEPTS = [
         { id: "gyn", name: "Gynaecology", icon: "G" },
@@ -1041,7 +1066,7 @@
           days: [1, 2, 3, 4, 5, 6],
           timing: "Mon-Sat - 10:00-13:00, 17:00-19:00",
           hue: 168,
-          bio: "Sample profile. Special interest in antenatal care and women's health.",
+          bio: "Special interest in antenatal care and women's health.",
         },
         {
           id: "d2",
@@ -1053,7 +1078,7 @@
           days: [2, 4, 6],
           timing: "Tue, Thu, Sat - 11:00-14:00",
           hue: 200,
-          bio: "Sample profile. Supports expectant mothers from first visit to delivery.",
+          bio: "Supports expectant mothers from first visit to delivery.",
         },
         {
           id: "d3",
@@ -1065,7 +1090,7 @@
           days: [1, 3, 5],
           timing: "Mon, Wed, Fri - 16:00-19:00",
           hue: 330,
-          bio: "Sample profile. Anomaly scans and fetal wellbeing assessments.",
+          bio: "Anomaly scans and fetal wellbeing assessments.",
         },
         {
           id: "d4",
@@ -1077,7 +1102,7 @@
           days: [1, 3, 5],
           timing: "Mon, Wed, Fri - 10:00-13:00",
           hue: 25,
-          bio: "Sample profile. Counselling and care for couples planning a family.",
+          bio: "Counselling and care for couples planning a family.",
         },
       ];
       const SV = [
@@ -1086,7 +1111,7 @@
           t: "Hospital Info",
           i: "H",
           r: "svc",
-          s: "A women's health and maternity centre (sample overview).",
+          s: "A women's health and maternity centre.",
           it: [
             [
               "About us",
@@ -1133,7 +1158,7 @@
             ["Maternity services", "Delivery planning and postnatal support."],
             [
               "Labour room",
-              "Admission information and what to bring (sample).",
+              "Admission information and what to bring.",
             ],
             ["Women's healthcare", "Care before, during and after pregnancy."],
           ],
@@ -1146,7 +1171,7 @@
           r: "svc",
           s: "Urgent care for women and expectant mothers.",
           it: [
-            ["Hospital emergency desk", "Hospital phone details on this demo are sample data."],
+            ["Hospital emergency desk", "Call reception at +91 89259 88682."],
             [
               "Immediate emergency",
               "In India, call 112 for immediate emergency assistance.",
@@ -1158,11 +1183,11 @@
           t: "Facilities",
           i: "F",
           r: "svc",
-          s: "Sample list of hospital facilities.",
+          s: "Hospital facilities and patient support services.",
           it: [
-            ["Inpatient rooms", "Sample: single and shared rooms."],
-            ["Pharmacy", "Sample: in-house pharmacy."],
-            ["Parking & access", "To be provided by the hospital."],
+            ["Inpatient rooms", "Ask reception about shared and private room options."],
+            ["Pharmacy", "Ask the care team about pharmacy services."],
+            ["Parking & access", "Contact reception for parking and arrival information."],
           ],
         },
         {
@@ -1172,9 +1197,9 @@
           r: "svc",
           s: "When you can visit patients.",
           it: [
-            ["Visiting hours", "Sample: 11:00-13:00 and 17:00-19:00."],
+            ["Visiting hours", "Please contact the ward to confirm visiting hours."],
             ["Outpatient timings", "See each doctor's profile."],
-            ["Maternity ward", "Visitor limits may apply (sample)."],
+            ["Maternity ward", "Please check visitor guidance with the maternity team."],
           ],
         },
         {
@@ -1184,7 +1209,7 @@
           r: "svc",
           s: "Reach the hospital team.",
           it: [
-            ["Reception", "Sample: 08:00-20:00 daily."],
+            ["Reception", "Contact reception for current opening hours."],
             ["WhatsApp", "Message us any time in this chat."],
           ],
         },
@@ -1212,7 +1237,7 @@
         con: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3H5a2 2 0 0 0-2 2c0 8.8 7.2 16 16 16a2 2 0 0 0 2-2v-2l-5-2-2 3a14 14 0 0 1-8-8l3-2-2-5Z"/></svg>`,
       };
       const DX = {
-        note: "Sample list for demonstration. Availability, preparation and pricing will be confirmed by the hospital.",
+        note: "Diagnostic test availability, preparation and pricing are confirmed by the hospital.",
         categories: [
           {
             name: "Blood tests",
@@ -1436,15 +1461,15 @@
         RETURN_NOTE = "";
       V.home = async () => {
         const [p, services] = await Promise.all([api.profile(), api.services()]);
-        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i style="--icon-color:${SERVICE_ACCENTS[x.id] || "#0d7a6b"}">${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
+        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i style="--icon-color:${SERVICE_ACCENTS[x.id] || "#0d7a6b"}">${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Choose a service or care team to get started.</p>`;
       };
       V.svc = async (id) => {
         const s = (await api.services()).find((x) => x.id === id),
           p = id === "con" ? await api.profile() : null,
           extra = {
-            fac: `<div class="card"><b>Explore room options</b><p class="sm">Choose a room type to see the sample facilities.</p><div class="chips"><button type="button" class="chip on" data-act="room:shared">Shared room</button><button type="button" class="chip" data-act="room:private">Private room</button></div><p id="room-info" class="sm">Shared room: shared accommodation, nursing support and access to the hospital pharmacy. Availability and charges are confirmed by the hospital.</p></div>`,
-            vis: `<div class="card"><b>Plan your visit</b><label class="f"><span>Ward</span><select id="visitWard"><option>General ward</option><option>Maternity ward</option><option>Intensive care unit</option></select></label><label class="f"><span>Visit date</span><input id="visitDate" type="date" value="${new Date().toISOString().slice(0, 10)}"></label><button type="button" class="btn p w" data-act="check-hours">Check visiting hours</button><p id="visit-result" class="sm" aria-live="polite">Choose a ward and date to check the sample visiting schedule.</p></div>`,
-            em: `<div class="card emergency-call"><b>Need immediate help?</b><p class="sm">If there is an immediate emergency in India, call the national emergency number.</p><a class="btn urgent w" href="tel:112">Call 112</a><p class="sm">The hospital phone number shown in this demo is only sample data.</p></div><div class="card"><b>Prepare for the call</b><p class="sm">Select any details you want to have ready. This checklist stays on this device.</p><div class="emergency-list"><label><input class="em-check" type="checkbox" value="Exact location of the patient">Exact location of the patient</label><label><input class="em-check" type="checkbox" value="Caller name and callback number">Caller name and callback number</label><label><input class="em-check" type="checkbox" value="What happened and when it began">What happened and when it began</label><label><input class="em-check" type="checkbox" value="Patient age and pregnancy status, if relevant">Patient age and pregnancy status, if relevant</label><label><input class="em-check" type="checkbox" value="Known conditions and medicines">Known conditions and medicines</label></div><button type="button" class="btn" data-act="copy-emergency-checklist">Copy selected details</button><p id="emergency-status" class="sm emergency-status" aria-live="polite"></p></div>`,
+            fac: `<div class="card"><b>Explore room options</b><p class="sm">Choose a room type to view its details.</p><div class="chips"><button type="button" class="chip on" data-act="room:shared">Shared room</button><button type="button" class="chip" data-act="room:private">Private room</button></div><p id="room-info" class="sm">Shared room: shared accommodation and nursing support. Contact reception to confirm availability and charges.</p></div>`,
+            vis: `<div class="card"><b>Plan your visit</b><label class="f"><span>Ward</span><select id="visitWard"><option>General ward</option><option>Maternity ward</option><option>Intensive care unit</option></select></label><label class="f"><span>Visit date</span><input id="visitDate" type="date" value="${new Date().toISOString().slice(0, 10)}"></label><button type="button" class="btn p w" data-act="check-hours">Check visiting hours</button><p id="visit-result" class="sm" aria-live="polite">Choose a ward and date to check with the hospital team.</p></div>`,
+            em: `<div class="card emergency-call"><div class="emergency-call-row"><div><b>Need immediate help?</b><p class="sm">If there is an immediate emergency in India, call the national emergency number.</p></div><a class="btn urgent call-button" href="tel:112">Call 112</a></div><p class="sm emergency-call-note">For hospital assistance, call +91 89259 88682.</p></div><div class="card"><b>Prepare for the call</b><p class="sm">Select any details you want to have ready. This checklist stays on this device.</p><div class="emergency-list"><label><input class="em-check" type="checkbox" value="Exact location of the patient">Exact location of the patient</label><label><input class="em-check" type="checkbox" value="Caller name and callback number">Caller name and callback number</label><label><input class="em-check" type="checkbox" value="What happened and when it began">What happened and when it began</label><label><input class="em-check" type="checkbox" value="Patient age and pregnancy status, if relevant">Patient age and pregnancy status, if relevant</label><label><input class="em-check" type="checkbox" value="Known conditions and medicines">Known conditions and medicines</label></div><button type="button" class="btn" data-act="copy-emergency-checklist">Copy selected details</button><p id="emergency-status" class="sm emergency-status" aria-live="polite"></p></div>`,
             con: `<div class="card"><b>Quick contact tools</b><p class="sm">Copy these details to share with a family member.</p><div class="two"><button type="button" class="btn" data-act="copy-phone">Copy phone number</button><button type="button" class="btn" data-act="copy-address">Copy address</button></div><p id="contact-copy-status" class="sm" aria-live="polite"></p></div>`,
           }[id] || "";
         return `<div class="hero c"><i class="big" style="color:${SERVICE_ACCENTS[id] || "#ffffff"}">${SERVICE_ICONS[id] || "IH"}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${extra}${id === "info" ? `<div class="card"><b>Explore hospital support</b><div class="two"><button type="button" class="btn" data-go="docs">View doctors &amp; departments</button><button type="button" class="btn" data-go="enq">Contact patient support</button></div></div>` : ""}${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}${id === "em" ? "" : `<div class="two"><button type="button" class="btn p" data-go="bk0">Book appointment</button><button type="button" class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`}`;
@@ -1464,7 +1489,7 @@
       V.doc = async (id) => {
         const d = await api.doc(id),
           dn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        return `<div class="hero c">${av(d, "lg")}<h2>${d.name}</h2><p>${d.qual}</p><span class="badge">${d.spec}</span></div><div class="card"><div class="li"><b>Experience</b><span>${d.exp} years (sample)</span></div><div class="li"><b>Consultation timings</b><span>${d.timing}</span></div><div class="li"><b>Available days</b><span>${d.days.map((x) => dn[x]).join(", ")}</span></div></div><div class="card"><b>About</b><p class="sm">${d.bio}</p></div><button class="btn p w" data-act="bookdoc:${d.id}">Book appointment</button>`;
+        return `<div class="hero c">${av(d, "lg")}<h2>${d.name}</h2><p>${d.qual}</p><span class="badge">${d.spec}</span></div><div class="card"><div class="li"><b>Experience</b><span>${d.exp} years</span></div><div class="li"><b>Consultation timings</b><span>${d.timing}</span></div><div class="li"><b>Available days</b><span>${d.days.map((x) => dn[x]).join(", ")}</span></div></div><div class="card"><b>About</b><p class="sm">${d.bio}</p></div><button class="btn p w" data-act="bookdoc:${d.id}">Book appointment</button>`;
       };
       V.bk0 = async () => {
         B = {};
@@ -1689,8 +1714,8 @@
           const info = wb.querySelector("#room-info");
           if (info)
             info.textContent = privateRoom
-              ? "Private room: a private patient room with family seating and nursing support. Availability and charges are confirmed by the hospital."
-              : "Shared room: shared accommodation, nursing support and access to the hospital pharmacy. Availability and charges are confirmed by the hospital.";
+              ? "Private room: a private patient room with family seating and nursing support. Contact reception to confirm availability and charges."
+              : "Shared room: shared accommodation and nursing support. Contact reception to confirm availability and charges.";
         } else if (k === "check-hours") {
           const ward = wb.querySelector("#visitWard")?.value || "General ward";
           const date = wb.querySelector("#visitDate")?.value;
@@ -1701,7 +1726,7 @@
               result.textContent = "Please contact the care team before visiting the intensive care unit.";
             else {
               const day = new Date(date + "T12:00:00").toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" });
-              result.textContent = `${ward} visiting hours on ${day}: 11:00 AM to 1:00 PM and 5:00 PM to 7:00 PM. These sample hours may change; please confirm with the hospital.`;
+              result.textContent = `For ${ward} on ${day}, please call reception at +91 89259 88682 to confirm visiting hours before your visit.`;
             }
           }
         } else if (k === "copy-emergency-checklist") {
@@ -2015,7 +2040,7 @@
             `<option value="${i}">${s[0]} ${s[1].split("?")[0]}</option>`,
         ).join("") +
         WS.map((s, i) => `<option value="w${i}">${s[0]}</option>`).join("");
-      function showSample() {
+      function showApiExample() {
         const v = sx.value;
         if (v[0] === "w") {
           sr.textContent = JSON.stringify(WS[+v.slice(1)][1], null, 2);
@@ -2028,8 +2053,8 @@
           (b ? `Request body:\n${JSON.stringify(b, null, 2)}\n` : "") +
           `\nResponse ${r.status}:\n${JSON.stringify(r.body, null, 2)}`;
       }
-      sx.onchange = showSample;
-      showSample();
+      sx.onchange = showApiExample;
+      showApiExample();
       function start() {
         chat.innerHTML =
           '<div class="day">Today</div><div class="day">Send any message to start</div>';
