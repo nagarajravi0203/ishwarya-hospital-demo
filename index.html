@@ -350,6 +350,7 @@
         font-size: 1.05rem;
       }
       .wv {
+        min-height: 0;
         position: absolute;
         inset: 0;
         background: var(--wv);
@@ -393,7 +394,10 @@
       }
       #wb {
         flex: 1;
+        min-height: 0;
         overflow: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
         padding: 14px 14px 24px;
       }
       #wb h2 {
