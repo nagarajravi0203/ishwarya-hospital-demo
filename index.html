@@ -380,6 +380,25 @@
       .wh b {
         font-size: 0.92rem;
       }
+      .wh .wh-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+      }
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 auto;
+        border-radius: 9px;
+        background: var(--t);
+        color: var(--on);
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
       .wh small {
         display: block;
         font-size: 0.7rem;
@@ -487,9 +506,11 @@
         transform: translateY(-2px);
       }
       .tile i {
-        display: block;
+        display: grid;
+        place-items: center;
         font-style: normal;
         font-size: 1.5rem;
+        color: var(--t);
         margin-bottom: 4px;
         background: var(--soft);
         width: 44px;
@@ -497,6 +518,11 @@
         line-height: 44px;
         border-radius: 14px;
         margin-inline: auto;
+      }
+      .tile i svg {
+        display: block;
+        width: 27px;
+        height: 27px;
       }
       .row {
         display: flex;
@@ -923,7 +949,7 @@
           <div class="wh">
             <button data-act="back" aria-label="Back">Back</button>
             <div>
-              <b id="wt">Hospital services</b
+              <b class="wh-title"><span class="brand-mark" aria-hidden="true">IH</span><span id="wt">Hospital services</span></b
               ><small>Secure - ishwarya.wize.app</small>
             </div>
             <button data-act="close" aria-label="Close">Close</button>
@@ -976,10 +1002,10 @@
         emergency: "Emergency desk (sample: 24x7)",
       };
       const DEPTS = [
-        { id: "gyn", name: "Gynaecology", icon: "CARE" },
-        { id: "mat", name: "Maternity", icon: "MAT" },
-        { id: "fm", name: "Fetal Medicine", icon: "DOCTOR" },
-        { id: "inf", name: "Fertility Care", icon: "FERT" },
+        { id: "gyn", name: "Gynaecology", icon: "G" },
+        { id: "mat", name: "Maternity", icon: "M" },
+        { id: "fm", name: "Fetal Medicine", icon: "FM" },
+        { id: "inf", name: "Fertility Care", icon: "F" },
       ];
       const DOCS = [
         {
@@ -1140,6 +1166,17 @@
           ],
         },
       ];
+      const SERVICE_ICONS = {
+        info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5l8-3 8 3v16M9 21v-5h6v5M9 8h.01M15 8h.01M9 11h.01M15 11h.01"/></svg>`,
+        docs: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M19 8v6M16 11h6"/></svg>`,
+        gyn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-8-4.7-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6.3-8 11-8 11Z"/><path d="M12 9v6M9 12h6"/></svg>`,
+        mat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21a7 7 0 0 1 14 0M9 14h6M12 12v5"/></svg>`,
+        lab: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M8 15h8"/></svg>`,
+        em: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>`,
+        fac: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19V8h18v11M3 15h18M6 8V5h5v3M6 19v2M18 19v2"/></svg>`,
+        vis: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+        con: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3H5a2 2 0 0 0-2 2c0 8.8 7.2 16 16 16a2 2 0 0 0 2-2v-2l-5-2-2 3a14 14 0 0 1-8-8l3-2-2-5Z"/></svg>`,
+      };
       const DX = {
         note: "Sample list for demonstration. Availability, preparation and pricing will be confirmed by the hospital.",
         categories: [
@@ -1365,7 +1402,7 @@
         RETURN_NOTE = "";
       V.home = async () => {
         const [p, services] = await Promise.all([api.profile(), api.services()]);
-        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i>${x.i}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
+        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i>${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
       };
       V.svc = async (id) => {
         const s = (await api.services()).find((x) => x.id === id),
