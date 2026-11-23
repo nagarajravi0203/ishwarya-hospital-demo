@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>WIZE · WhatsApp hospital automation demo</title>
+    <title>WIZE Â· WhatsApp hospital automation demo</title>
     <style>
       :root {
         --bg: #eaf1ef;
@@ -861,7 +861,7 @@
         <div class="cols">
           <div class="box">
             <b>Real WhatsApp Cloud API</b>Reply buttons (max 3), CTA URL buttons
-            that open a hosted web app in WhatsApp’s in-app browser, native
+            that open a hosted web app in WhatsAppâ€™s in-app browser, native
             WhatsApp Flows (JSON-defined, fixed components), webhooks and
             template reminders.
           </div>
@@ -897,8 +897,8 @@
         <div class="top">
           <div class="a">ISH</div>
           <div>
-            <b>Ishwarya Hospital ✔</b
-            ><small>Business account · Powered by WIZE</small>
+            <b>Ishwarya Hospital âœ”</b
+            ><small>Business account Â· Powered by WIZE</small>
           </div>
         </div>
         <div id="chat" aria-live="polite"></div>
@@ -907,16 +907,16 @@
             id="ci"
             placeholder="Type a message"
             aria-label="Type a message"
-          /><button aria-label="Send">➤</button>
+          /><button aria-label="Send">âž¤</button>
         </form>
         <div class="wv" id="wv">
           <div class="wh">
-            <button data-act="back" aria-label="Back">‹</button>
+            <button data-act="back" aria-label="Back">â€¹</button>
             <div>
               <b id="wt">Hospital services</b
-              ><small>🔒 ishwarya.wize.app</small>
+              ><small>ðŸ”’ ishwarya.wize.app</small>
             </div>
-            <button data-act="close" aria-label="Close">✕</button>
+            <button data-act="close" aria-label="Close">âœ•</button>
           </div>
           <div id="wb"></div>
         </div>
@@ -960,16 +960,16 @@
       const LINK_TOKEN = URL_PARAMS.get("token") || "";
       const PROFILE = {
         name: "Ishwarya Hospital",
-        tagline: "Women’s health & maternity care",
+        tagline: "Womenâ€™s health & maternity care",
         phone: "+91 00000 00000 (sample)",
         address: "Sample address, to be provided by the hospital",
-        emergency: "Emergency desk (sample: 24×7)",
+        emergency: "Emergency desk (sample: 24Ã—7)",
       };
       const DEPTS = [
-        { id: "gyn", name: "Gynaecology", icon: "🌸" },
-        { id: "mat", name: "Maternity", icon: "🤰" },
-        { id: "fm", name: "Fetal Medicine", icon: "🩺" },
-        { id: "inf", name: "Fertility Care", icon: "💠" },
+        { id: "gyn", name: "Gynaecology", icon: "ðŸŒ¸" },
+        { id: "mat", name: "Maternity", icon: "ðŸ¤°" },
+        { id: "fm", name: "Fetal Medicine", icon: "ðŸ©º" },
+        { id: "inf", name: "Fertility Care", icon: "ðŸ’ " },
       ];
       const DOCS = [
         {
@@ -980,9 +980,9 @@
           dept: "gyn",
           exp: 18,
           days: [1, 2, 3, 4, 5, 6],
-          timing: "Mon–Sat · 10:00–13:00, 17:00–19:00",
+          timing: "Monâ€“Sat Â· 10:00â€“13:00, 17:00â€“19:00",
           hue: 168,
-          bio: "Sample profile. Special interest in antenatal care and women’s health.",
+          bio: "Sample profile. Special interest in antenatal care and womenâ€™s health.",
         },
         {
           id: "d2",
@@ -992,7 +992,7 @@
           dept: "mat",
           exp: 14,
           days: [2, 4, 6],
-          timing: "Tue, Thu, Sat · 11:00–14:00",
+          timing: "Tue, Thu, Sat Â· 11:00â€“14:00",
           hue: 200,
           bio: "Sample profile. Supports expectant mothers from first visit to delivery.",
         },
@@ -1004,7 +1004,7 @@
           dept: "fm",
           exp: 11,
           days: [1, 3, 5],
-          timing: "Mon, Wed, Fri · 16:00–19:00",
+          timing: "Mon, Wed, Fri Â· 16:00â€“19:00",
           hue: 330,
           bio: "Sample profile. Anomaly scans and fetal wellbeing assessments.",
         },
@@ -1016,7 +1016,7 @@
           dept: "inf",
           exp: 9,
           days: [1, 3, 5],
-          timing: "Mon, Wed, Fri · 10:00–13:00",
+          timing: "Mon, Wed, Fri Â· 10:00â€“13:00",
           hue: 25,
           bio: "Sample profile. Counselling and care for couples planning a family.",
         },
@@ -1025,9 +1025,9 @@
         {
           id: "info",
           t: "Hospital Info",
-          i: "🏥",
+          i: "ðŸ¥",
           r: "svc",
-          s: "A women’s health and maternity centre (sample overview).",
+          s: "A womenâ€™s health and maternity centre (sample overview).",
           it: [
             [
               "About us",
@@ -1043,13 +1043,13 @@
             ],
           ],
         },
-        { id: "docs", t: "Doctors", i: "👩‍⚕️", r: "docs" },
+        { id: "docs", t: "Doctors", i: "ðŸ‘©â€âš•ï¸", r: "docs" },
         {
           id: "gyn",
           t: "Gynaecology",
-          i: "🌸",
+          i: "ðŸŒ¸",
           r: "svc",
-          s: "Women’s health consultations and treatment.",
+          s: "Womenâ€™s health consultations and treatment.",
           it: [
             ["Consultations", "Routine and specialist gynaecology visits."],
             ["Health check-ups", "Preventive screening and counselling."],
@@ -1059,7 +1059,7 @@
         {
           id: "mat",
           t: "Maternity",
-          i: "🤰",
+          i: "ðŸ¤°",
           r: "mat",
           s: "Care from the first scan to postnatal recovery.",
           it: [
@@ -1076,14 +1076,14 @@
               "Labour room",
               "Admission information and what to bring (sample).",
             ],
-            ["Women’s healthcare", "Care before, during and after pregnancy."],
+            ["Womenâ€™s healthcare", "Care before, during and after pregnancy."],
           ],
         },
-        { id: "lab", t: "Lab & Tests", i: "🧪", r: "dx" },
+        { id: "lab", t: "Lab & Tests", i: "ðŸ§ª", r: "dx" },
         {
           id: "em",
           t: "Emergency",
-          i: "🚑",
+          i: "ðŸš‘",
           r: "svc",
           s: "Urgent care for women and expectant mothers.",
           it: [
@@ -1097,7 +1097,7 @@
         {
           id: "fac",
           t: "Facilities",
-          i: "🛏️",
+          i: "ðŸ›ï¸",
           r: "svc",
           s: "Sample list of hospital facilities.",
           it: [
@@ -1109,23 +1109,23 @@
         {
           id: "vis",
           t: "Visiting Hours",
-          i: "🕒",
+          i: "ðŸ•’",
           r: "svc",
           s: "When you can visit patients.",
           it: [
-            ["Visiting hours", "Sample: 11:00–13:00 and 17:00–19:00."],
-            ["Outpatient timings", "See each doctor’s profile."],
+            ["Visiting hours", "Sample: 11:00â€“13:00 and 17:00â€“19:00."],
+            ["Outpatient timings", "See each doctorâ€™s profile."],
             ["Maternity ward", "Visitor limits may apply (sample)."],
           ],
         },
         {
           id: "con",
           t: "Contact",
-          i: "📍",
+          i: "ðŸ“",
           r: "svc",
           s: "Reach the hospital team.",
           it: [
-            ["Reception", "Sample: 08:00–20:00 daily."],
+            ["Reception", "Sample: 08:00â€“20:00 daily."],
             ["WhatsApp", "Message us any time in this chat."],
           ],
         },
@@ -1212,11 +1212,14 @@
             "patientName",
             "phone",
           ],
+          "/api/diagnostic-appointments": ["name", "phone", "preferredTime", "tests"],
           "/api/patient-enquiries": ["name", "phone", "category", "message"],
           "/api/feedback": ["rating"],
           "/api/patient/callback-request": ["name", "phone"],
         }[path];
         if (m === "POST" && need) {
+          if (path === "/api/diagnostic-appointments" && (!Array.isArray(b.tests) || !b.tests.length))
+            return bad(422, "Select at least one diagnostic test");
           if (need.some((k) => !b[k]))
             return bad(422, "Missing required fields");
           if (b.phone && !/^[6-9]\d{9}$/.test(b.phone))
@@ -1227,6 +1230,7 @@
               ref:
                 {
                   "/api/appointments": "APT",
+                  "/api/diagnostic-appointments": "DGN",
                   "/api/patient-enquiries": "ENQ",
                   "/api/feedback": "FDB",
                   "/api/patient/callback-request": "CBR",
@@ -1278,7 +1282,7 @@
         }
         lg(
           m,
-          `${p} → ${st} · ${Math.round(performance.now() - t0)}ms`,
+          `${p} â†’ ${st} Â· ${Math.round(performance.now() - t0)}ms`,
           st >= 400 || !st ? "er" : "",
         );
         if (st < 200 || st >= 300)
@@ -1300,6 +1304,7 @@
             `/api/appointments/available-slots?doctorId=${id}&date=${d}`,
           ),
         book: (b) => req("POST", "/api/appointments", b),
+        diagnosticBooking: (b) => req("POST", "/api/diagnostic-appointments", b),
         enquiry: (b) => req("POST", "/api/patient-enquiries", b),
         dx: () => req("GET", "/api/diagnostics"),
         feedback: (b) => req("POST", "/api/feedback", b),
@@ -1319,9 +1324,9 @@
                 .join("")
         }</div>`;
       const stp = (n) =>
-        `<div class="stp">${[0, 1, 2, 3, 4].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div><p class="sm">Step ${n + 1} of 5 · ${["Department", "Doctor", "Date & time", "Patient details", "Confirm"][n]}</p>`;
+        `<div class="stp">${[0, 1, 2, 3, 4].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div><p class="sm">Step ${n + 1} of 5 Â· ${["Department", "Doctor", "Date & time", "Patient details", "Confirm"][n]}</p>`;
       const F = (n, l, t = "text", o = {}) =>
-        `<label class="f"><span>${l}${o.r ? " *" : ""}</span>${t === "select" ? `<select name="${n}" ${o.r ? "data-r" : ""}><option value="">Select…</option>${o.o.map((x) => `<option ${x === o.s ? "selected" : ""}>${x}</option>`).join("")}</select>` : t === "area" ? `<textarea name="${n}" rows="3" ${o.r ? "data-r" : ""} placeholder="${o.p || ""}"></textarea>` : `<input name="${n}" type="${t}" ${o.r ? "data-r" : ""} ${t === "tel" ? 'inputmode="numeric" maxlength="10"' : ""} placeholder="${o.p || ""}" value="${esc(o.v)}">`}<small class="err"></small></label>`;
+        `<label class="f"><span>${l}${o.r ? " *" : ""}</span>${t === "select" ? `<select name="${n}" ${o.r ? "data-r" : ""}><option value="">Selectâ€¦</option>${o.o.map((x) => `<option ${x === o.s ? "selected" : ""}>${x}</option>`).join("")}</select>` : t === "area" ? `<textarea name="${n}" rows="3" ${o.r ? "data-r" : ""} placeholder="${o.p || ""}"></textarea>` : `<input name="${n}" type="${t}" ${o.r ? "data-r" : ""} ${t === "tel" ? 'inputmode="numeric" maxlength="10"' : ""} placeholder="${o.p || ""}" value="${esc(o.v)}">`}<small class="err"></small></label>`;
       const enqForm = (c = "", d = "") =>
         `<form data-form="enq" novalidate>${F("name", "Patient name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("category", "Enquiry category", "select", { r: 1, o: ["General", "Maternity", "Gynaecology", "Diagnostics", "Appointments", "Other"], s: c })}${F("department", "Preferred department", "select", { o: [...DEPTS.map((x) => x.name), "Not sure"], s: d })}${F("message", "Enquiry", "area", { r: 1, p: "How can we help?" })}<div class="ban" hidden></div><button class="btn p w">Send enquiry</button></form>`;
       /* ---------- Views ---------- */
@@ -1345,6 +1350,7 @@
         };
       let B = {},
         DF = "",
+        DG_SELECTED = [],
         LD = {},
         RETURN_NOTE = "";
       V.home = async () => {
@@ -1363,7 +1369,7 @@
           d
             .map(
               (x) =>
-                `<div class="card dc">${av(x)}<div><b>${x.name}</b><small>${x.qual}</small><em>${x.spec}</em><small>${x.exp} years · ${x.timing}</small></div><div class="two"><button class="btn" data-go="doc:${x.id}">View profile</button><button class="btn p" data-act="bookdoc:${x.id}">Book appointment</button></div></div>`,
+                `<div class="card dc">${av(x)}<div><b>${x.name}</b><small>${x.qual}</small><em>${x.spec}</em><small>${x.exp} years Â· ${x.timing}</small></div><div class="two"><button class="btn" data-go="doc:${x.id}">View profile</button><button class="btn p" data-act="bookdoc:${x.id}">Book appointment</button></div></div>`,
             )
             .join("")
         );
@@ -1382,7 +1388,7 @@
           d
             .map(
               (x) =>
-                `<button class="card row" data-act="bdept:${x.id}"><i class="ic">${x.icon}</i><b>${x.name}</b><u>›</u></button>`,
+                `<button class="card row" data-act="bdept:${x.id}"><i class="ic">${x.icon}</i><b>${x.name}</b><u>â€º</u></button>`,
             )
             .join("")
         );
@@ -1426,7 +1432,7 @@
         const d = await api.doc(B.doc);
         return (
           stp(4) +
-          `<div class="card"><div class="li"><b>Doctor</b><span>${d.name} · ${d.spec}</span></div><div class="li"><b>Date</b><span>${new Date(B.date + "T00:00").toDateString()}</span></div><div class="li"><b>Time</b><span>${fmt(B.slot)}</span></div><div class="li"><b>Patient</b><span>${esc(B.patientName)}</span></div><div class="li"><b>Mobile</b><span>+91 ${B.phone}</span></div><div class="li"><b>Visit type</b><span>${B.visitType}</span></div></div><form data-form="bk4"><div class="ban" hidden></div><button class="btn p w">Confirm appointment</button></form>`
+          `<div class="card"><div class="li"><b>Doctor</b><span>${d.name} Â· ${d.spec}</span></div><div class="li"><b>Date</b><span>${new Date(B.date + "T00:00").toDateString()}</span></div><div class="li"><b>Time</b><span>${fmt(B.slot)}</span></div><div class="li"><b>Patient</b><span>${esc(B.patientName)}</span></div><div class="li"><b>Mobile</b><span>+91 ${B.phone}</span></div><div class="li"><b>Visit type</b><span>${B.visitType}</span></div></div><form data-form="bk4"><div class="ban" hidden></div><button class="btn p w">Confirm appointment</button></form>`
         );
       };
       V.mat = async () => {
@@ -1435,30 +1441,37 @@
       };
       V.dx = async () => {
         const d = await api.dx();
+        DG_SELECTED = [];
         return (
-          `<div class="hero c"><i class="big">🧪</i><h2>Laboratory & diagnostics</h2><p>${d.note}</p></div>` +
+          `<div class="hero c"><i class="big">&#129514;</i><h2>Laboratory &amp; diagnostics</h2><p>${d.note}</p></div>` +
           d.categories
             .map(
               (c) =>
-                `<div class="card"><b>${c.name}</b><div class="chips wrap-chips" style="margin-top:6px">${c.tests.map((t) => `<span class="chip">${t}</span>`).join("")}</div></div>`,
+                `<div class="card"><b>${c.name}</b><div class="chips wrap-chips" style="margin-top:6px">${c.tests.map((t) => `<button type="button" class="chip" data-act="test:${encodeURIComponent(t)}" aria-pressed="false">${t}</button>`).join("")}</div></div>`,
             )
             .join("") +
-          `<div class="two"><button class="btn p" data-go="cb">Request a callback</button><button class="btn" data-go="enq">Send enquiry</button></div>`
+          `<div class="card"><b>Request a diagnostic appointment</b><p class="sm">Select one or more tests above, then send your preferred visit time.</p><p id="diag-selection" class="sm">No tests selected yet.</p><form data-form="diag" novalidate>${F("name", "Patient name", "text", { r: 1, p: "Full name" })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("preferredTime", "Preferred visit time", "select", { r: 1, o: ["Morning (9 AM to 12 PM)", "Afternoon (12 PM to 4 PM)", "Evening (4 PM to 7 PM)"] })}<div class="ban" hidden></div><button class="btn p w" id="diag-submit" disabled>Request diagnostic appointment</button></form></div><div class="two"><button type="button" class="btn" data-go="bk0">Book a doctor appointment</button></div>`
         );
       };
       V.enq = async () => `<h3>Patient enquiry</h3>` + enqForm();
       V.cb = async () =>
-        `<h3>Request a callback</h3><form data-form="cb" novalidate>${F("name", "Your name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("topic", "Callback about", "select", { o: ["Appointments", "Diagnostics", "Maternity", "General enquiry"] })}${F("preferredTime", "Preferred time", "select", { o: ["Morning (9–12)", "Afternoon (12–4)", "Evening (4–7)"] })}<div class="ban" hidden></div><button class="btn p w">Request callback</button></form>`;
+        `<h3>Request a callback</h3><form data-form="cb" novalidate>${F("name", "Your name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("topic", "Callback about", "select", { o: ["Appointments", "Diagnostics", "Maternity", "General enquiry"] })}${F("preferredTime", "Preferred time", "select", { o: ["Morning (9â€“12)", "Afternoon (12â€“4)", "Evening (4â€“7)"] })}<div class="ban" hidden></div><button class="btn p w">Request callback</button></form>`;
       V.fb = async () =>
-        `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">★</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap-chips">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
+        `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">â˜…</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap-chips">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
       V.done = async () =>
-        `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p><div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>✓ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>✓ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>✓ A reminder is sent the day before your visit.</span></div>' : ""}</div>`;
+        `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p>${LD.tpl === "diagnostic_appointment_confirmation" ? `<div class="li"><b>Selected tests</b><span>${esc(DG_SELECTED.join(", "))}</span></div><div class="li"><b>Preferred time</b><span>${esc(LD.data.preferredTime)}</span></div>` : ""}<div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>âœ“ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>âœ“ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>âœ“ A reminder is sent the day before your visit.</span></div>' : ""}</div>`;
       const FM = {
         enq: {
           call: (d) => api.enquiry(d),
           t: "Enquiry received",
           m: "Thank you. Our team will reply on WhatsApp shortly.",
           tpl: "enquiry_acknowledgement",
+        },
+        diag: {
+          call: (d) => api.diagnosticBooking({ ...d, tests: [...DG_SELECTED] }),
+          t: "Diagnostic appointment requested",
+          m: "Your selected tests and preferred time have been sent to the hospital team.",
+          tpl: "diagnostic_appointment_confirmation",
         },
         cb: {
           call: (d) => api.callback(d),
@@ -1503,7 +1516,7 @@
           wb.innerHTML = await V[n](a);
           wb.scrollTop = 0;
         } catch (e) {
-          wb.innerHTML = `<div class="card c"><i class="big">⚠️</i><b>Couldn’t load this page</b><p class="sm">${esc(e.message)}. Please try again.</p><button class="btn p" data-act="retry">Try again</button></div>`;
+          wb.innerHTML = `<div class="card c"><i class="big">âš ï¸</i><b>Couldnâ€™t load this page</b><p class="sm">${esc(e.message)}. Please try again.</p><button class="btn p" data-act="retry">Try again</button></div>`;
         }
       }
       const nav = (n, a) => {
@@ -1581,6 +1594,20 @@
             c.classList.toggle("on", c === t),
           );
           $("#nx").disabled = false;
+        } else if (k === "test") {
+          const test = decodeURIComponent(v);
+          if (DG_SELECTED.includes(test))
+            DG_SELECTED = DG_SELECTED.filter((item) => item !== test);
+          else DG_SELECTED.push(test);
+          t.classList.toggle("on", DG_SELECTED.includes(test));
+          t.setAttribute("aria-pressed", String(DG_SELECTED.includes(test)));
+          const summary = wb.querySelector("#diag-selection");
+          if (summary)
+            summary.textContent = DG_SELECTED.length
+              ? `Selected tests: ${DG_SELECTED.join(", ")}`
+              : "No tests selected yet.";
+          const submit = wb.querySelector("#diag-submit");
+          if (submit) submit.disabled = DG_SELECTED.length === 0;
         } else if (k === "tog") t.classList.toggle("on");
         else if (k === "star") {
           const f = t.closest("form");
@@ -1620,6 +1647,12 @@
           k = f.dataset.form,
           d = readForm(f);
         if (!d) return;
+        if (k === "diag" && !DG_SELECTED.length) {
+          const ban = f.querySelector(".ban");
+          ban.hidden = false;
+          ban.textContent = "Select at least one diagnostic test above.";
+          return;
+        }
         if (k === "bk3") {
           Object.assign(B, d);
           return nav("bk4");
@@ -1633,11 +1666,11 @@
           lab = btn.textContent;
         ban.hidden = true;
         btn.disabled = true;
-        btn.textContent = "Submitting…";
+        btn.textContent = "Submittingâ€¦";
         try {
           const c = FM[k],
             r = await c.call(d);
-          LD = { ...c, ref: r.ref };
+          LD = { ...c, ref: r.ref, data: d };
           lg(
             "API",
             "Form saved by backend. WhatsApp acknowledgement is sent by the backend integration.",
@@ -1647,7 +1680,7 @@
           paint();
         } catch (err) {
           ban.hidden = false;
-          ban.textContent = `Couldn’t submit (${err.message}). Your details are kept. Please try again.`;
+          ban.textContent = `Couldnâ€™t submit (${err.message}). Your details are kept. Please try again.`;
           btn.disabled = false;
           btn.textContent = lab;
         }
@@ -1661,7 +1694,7 @@
       function bub(c, h) {
         chat.insertAdjacentHTML(
           "beforeend",
-          `<div class="m ${c}">${h}<em>${now()}${c === "out" ? " ✓✓" : ""}</em></div>`,
+          `<div class="m ${c}">${h}<em>${now()}${c === "out" ? " âœ“âœ“" : ""}</em></div>`,
         );
         chat.scrollTop = chat.scrollHeight;
       }
@@ -1682,7 +1715,7 @@
       }
       function pick(id, l) {
         bub("out", l);
-        lg("WA ⇦", "webhook · button_reply " + id, "wa");
+        lg("WA â‡¦", "webhook Â· button_reply " + id, "wa");
         setTimeout(() => {
           const action = { svc: "services", bk: "appointment", con: "contact" }[
             id
@@ -1691,7 +1724,7 @@
           target.searchParams.set("intent", "hospital-demo");
           target.searchParams.set("action", action);
           target.searchParams.set("preview", "1");
-          lg("WA ⇨", "CTA URL → " + target.pathname + target.search, "wa");
+          lg("WA â‡¨", "CTA URL â†’ " + target.pathname + target.search, "wa");
           if (id === "svc") openWV("home");
           else if (id === "bk") openWV("bk0");
           else openWV("svc", "con");
@@ -1699,7 +1732,7 @@
       }
       function welcome() {
         bot(
-          "Hello! 👋 Welcome to <strong>Ishwarya Hospital</strong>.\n\nWe’re here to help you with hospital services, doctor information, appointments and patient enquiries.\n\nHow can we assist you today?",
+          "Hello! ðŸ‘‹ Welcome to <strong>Ishwarya Hospital</strong>.\n\nWeâ€™re here to help you with hospital services, doctor information, appointments and patient enquiries.\n\nHow can we assist you today?",
           [
             ["svc", "Explore Hospital Services"],
             ["bk", "Book an Appointment"],
@@ -1707,8 +1740,8 @@
           ],
         );
         lg(
-          "WA ⇨",
-          "intent: hospital demo · interactive reply-buttons (3)",
+          "WA â‡¨",
+          "intent: hospital demo Â· interactive reply-buttons (3)",
           "wa",
         );
       }
@@ -1766,13 +1799,13 @@
             name: "A. Kumar",
             phone: "9876543210",
             topic: "Diagnostics",
-            preferredTime: "Morning (9–12)",
+            preferredTime: "Morning (9â€“12)",
           },
         ],
       ];
       const WS = [
         [
-          "WhatsApp ➜ outbound CTA URL button",
+          "WhatsApp âžœ outbound CTA URL button",
           {
             messaging_product: "whatsapp",
             to: "91XXXXXXXXXX",
@@ -1791,7 +1824,7 @@
           },
         ],
         [
-          "WhatsApp ⇦ inbound webhook (button reply)",
+          "WhatsApp â‡¦ inbound webhook (button reply)",
           {
             object: "whatsapp_business_account",
             entry: [
@@ -1821,7 +1854,7 @@
           },
         ],
         [
-          "WhatsApp ⇦ Flow completion payload (nfm_reply)",
+          "WhatsApp â‡¦ Flow completion payload (nfm_reply)",
           {
             from: "91XXXXXXXXXX",
             type: "interactive",
@@ -1878,10 +1911,10 @@
         if (!v) return;
         i.value = "";
         bub("out", esc(v));
-        lg("WA ⇦", 'webhook · text message "' + v + '"', "wa");
+        lg("WA â‡¦", 'webhook Â· text message "' + v + '"', "wa");
         const ty = document.createElement("div");
         ty.className = "m in";
-        ty.textContent = "typing…";
+        ty.textContent = "typingâ€¦";
         chat.appendChild(ty);
         chat.scrollTop = chat.scrollHeight;
         setTimeout(() => {
@@ -1898,8 +1931,9 @@
         if (action === "services") openWV("home");
         else if (action === "appointment") openWV("bk0");
         else if (action === "contact") openWV("svc", "con");
-        lg("WEB", "hospital demo landing · " + action, "wa");
+        lg("WEB", "hospital demo landing Â· " + action, "wa");
       }
     </script>
   </body>
 </html>
+
