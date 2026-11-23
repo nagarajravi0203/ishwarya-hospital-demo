@@ -1514,6 +1514,7 @@
         wv.classList.remove("open");
         stack = [];
         if (msg) bot(msg, btns);
+        else welcome();
       }
       wv.addEventListener("click", (e) => {
         const t = e.target.closest("[data-go],[data-act]");
@@ -1565,11 +1566,17 @@
           const e = f.rating.closest(".f");
           e.classList.remove("bad");
           e.querySelector(".err").textContent = "";
-        } else if (k === "finish")
-          closeWV(
-            `✅ ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We’ll remind you the day before your visit." : ""}`,
-            [["svc", "Explore Hospital Services"]],
-          );
+        } else if (k === "finish") {
+          const message =
+            LD.tpl === "appointment_confirmation"
+              ? `? <strong>Appointment request received</strong><br>Reference: <strong>${LD.ref}</strong><br>Patient: ${esc(B.patientName)}<br>Date: ${new Date(B.date + "T00:00").toDateString()}<br>Time: ${fmt(B.slot)}<br><br>Our front desk will contact you shortly to confirm your appointment.`
+              : `? ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We?ll remind you the day before your visit." : ""}`;
+          closeWV(message, [
+            ["bk", "Book another appointment"],
+            ["svc", "Explore Hospital Services"],
+            ["con", "Contact Hospital"],
+          ]);
+        }
       });
       function readForm(f) {
         let ok = true,
