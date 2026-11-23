@@ -616,8 +616,11 @@
       }
       .emergency-call-note { margin: 12px 0 0 !important; }
       .emergency-list { display: grid; gap: 8px; margin: 10px 0 14px; }
-      .emergency-list label { display: flex; gap: 9px; align-items: flex-start; color: var(--mute); }
+      .emergency-item { padding: 9px 0; border-bottom: 1px solid var(--line, #e7eceb); }
+      .emergency-list label { display: flex; gap: 9px; align-items: flex-start; color: var(--mute); cursor: pointer; }
       .emergency-list input { accent-color: #b42318; margin-top: 4px; }
+      .emergency-detail { width: 100%; margin: 8px 0 0 25px; max-width: calc(100% - 25px); }
+      .emergency-detail[hidden] { display: none; }
       .emergency-status { min-height: 1.2em; margin-top: 9px !important; }
 
       .btn:disabled {
@@ -1459,6 +1462,24 @@
         DG_SELECTED = [],
         LD = {},
         RETURN_NOTE = "";
+      const EMERGENCY_ITEMS = [
+        ["location", "Exact location of the patient", "Address, floor/room, or nearby landmark", "text"],
+        ["caller", "Caller name and callback number", "Your name and phone number", "text"],
+        ["event", "What happened and when it began", "Describe the problem and when it started", "area"],
+        ["patient", "Patient age and pregnancy status, if relevant", "Age; pregnancy status if relevant", "text"],
+        ["health", "Known conditions and medicines", "Health conditions and current medicines", "area"],
+      ];
+      const emergencySaved = (key) => {
+        try { return JSON.parse(localStorage.getItem("kar-emergency-checklist") || "{}")[key] || {}; }
+        catch { return {}; }
+      };
+      const saveEmergency = (key, values) => {
+        try {
+          const saved = JSON.parse(localStorage.getItem("kar-emergency-checklist") || "{}");
+          saved[key] = { ...saved[key], ...values };
+          localStorage.setItem("kar-emergency-checklist", JSON.stringify(saved));
+        } catch { /* The checklist still works for this visit if storage is unavailable. */ }
+      };
       V.home = async () => {
         const [p, services] = await Promise.all([api.profile(), api.services()]);
         return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i style="--icon-color:${SERVICE_ACCENTS[x.id] || "#0d7a6b"}">${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Choose a service or care team to get started.</p>`;
@@ -1469,7 +1490,7 @@
           extra = {
             fac: `<div class="card"><b>Explore room options</b><p class="sm">Choose a room type to view its details.</p><div class="chips"><button type="button" class="chip on" data-act="room:shared">Shared room</button><button type="button" class="chip" data-act="room:private">Private room</button></div><p id="room-info" class="sm">Shared room: shared accommodation and nursing support. Contact reception to confirm availability and charges.</p></div>`,
             vis: `<div class="card"><b>Plan your visit</b><label class="f"><span>Ward</span><select id="visitWard"><option>General ward</option><option>Maternity ward</option><option>Intensive care unit</option></select></label><label class="f"><span>Visit date</span><input id="visitDate" type="date" value="${new Date().toISOString().slice(0, 10)}"></label><button type="button" class="btn p w" data-act="check-hours">Check visiting hours</button><p id="visit-result" class="sm" aria-live="polite">Choose a ward and date to check with the hospital team.</p></div>`,
-            em: `<div class="card emergency-call"><div class="emergency-call-row"><div><b>Need immediate help?</b><p class="sm">If there is an immediate emergency in India, call the national emergency number.</p></div><a class="btn urgent call-button" href="tel:112">Call 112</a></div><p class="sm emergency-call-note">For hospital assistance, call +91 89259 88682.</p></div><div class="card"><b>Prepare for the call</b><p class="sm">Select any details you want to have ready. This checklist stays on this device.</p><div class="emergency-list"><label><input class="em-check" type="checkbox" value="Exact location of the patient">Exact location of the patient</label><label><input class="em-check" type="checkbox" value="Caller name and callback number">Caller name and callback number</label><label><input class="em-check" type="checkbox" value="What happened and when it began">What happened and when it began</label><label><input class="em-check" type="checkbox" value="Patient age and pregnancy status, if relevant">Patient age and pregnancy status, if relevant</label><label><input class="em-check" type="checkbox" value="Known conditions and medicines">Known conditions and medicines</label></div><button type="button" class="btn" data-act="copy-emergency-checklist">Copy selected details</button><p id="emergency-status" class="sm emergency-status" aria-live="polite"></p></div>`,
+            em: `<div class="card emergency-call"><div class="emergency-call-row"><div><b>Need immediate help?</b><p class="sm">If there is an immediate emergency in India, call the national emergency number.</p></div><a class="btn urgent call-button" href="tel:112">Call 112</a></div><p class="sm emergency-call-note">For hospital assistance, call +91 89259 88682.</p></div><div class="card"><b>Prepare for the call</b><p class="sm">Select a detail and add what you know. Entries are saved on this device.</p><div class="emergency-list">${EMERGENCY_ITEMS.map(([key, title, hint, type]) => { const saved = emergencySaved(key); return `<div class="emergency-item"><label><input class="em-check" type="checkbox" data-em-key="${key}" value="${title}" ${saved.checked ? "checked" : ""}><span>${title}</span></label>${type === "area" ? `<textarea class="f emergency-detail" data-em-detail="${key}" placeholder="${hint}" rows="2" ${saved.checked ? "" : "hidden"}>${esc(saved.detail || "")}</textarea>` : `<input class="f emergency-detail" data-em-detail="${key}" type="text" placeholder="${hint}" value="${esc(saved.detail || "")}" ${saved.checked ? "" : "hidden"}>`}</div>`; }).join("")}</div><button type="button" class="btn" data-act="copy-emergency-checklist">Copy selected details</button><p id="emergency-status" class="sm emergency-status" aria-live="polite"></p></div>`,
             con: `<div class="card"><b>Quick contact tools</b><p class="sm">Copy these details to share with a family member.</p><div class="two"><button type="button" class="btn" data-act="copy-phone">Copy phone number</button><button type="button" class="btn" data-act="copy-address">Copy address</button></div><p id="contact-copy-status" class="sm" aria-live="polite"></p></div>`,
           }[id] || "";
         return `<div class="hero c"><i class="big" style="color:${SERVICE_ACCENTS[id] || "#ffffff"}">${SERVICE_ICONS[id] || "IH"}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${extra}${id === "info" ? `<div class="card"><b>Explore hospital support</b><div class="two"><button type="button" class="btn" data-go="docs">View doctors &amp; departments</button><button type="button" class="btn" data-go="enq">Contact patient support</button></div></div>` : ""}${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}${id === "em" ? "" : `<div class="two"><button type="button" class="btn p" data-go="bk0">Book appointment</button><button type="button" class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`}`;
@@ -1663,6 +1684,18 @@
         ["svc", "Explore Hospital Services"],
         ["con", "Contact Hospital"],
       ];
+      wb.addEventListener("change", (e) => {
+        const checkbox = e.target.closest(".em-check");
+        if (!checkbox) return;
+        const key = checkbox.dataset.emKey;
+        const detail = wb.querySelector(`[data-em-detail="${key}"]`);
+        if (detail) detail.hidden = !checkbox.checked;
+        saveEmergency(key, { checked: checkbox.checked });
+      });
+      wb.addEventListener("input", (e) => {
+        const detail = e.target.closest("[data-em-detail]");
+        if (detail) saveEmergency(detail.dataset.emDetail, { detail: detail.value });
+      });
       wv.addEventListener("click", async (e) => {
         const t = e.target.closest("[data-go],[data-act]");
         if (!t || t.disabled) return;
@@ -1730,7 +1763,10 @@
             }
           }
         } else if (k === "copy-emergency-checklist") {
-          const selected = [...wb.querySelectorAll(".em-check:checked")].map((item) => item.value);
+          const selected = [...wb.querySelectorAll(".em-check:checked")].map((item) => {
+            const detail = wb.querySelector(`[data-em-detail="${item.dataset.emKey}"]`)?.value.trim();
+            return `${item.value}${detail ? ": " + detail : ""}`;
+          });
           const status = wb.querySelector("#emergency-status");
           if (!selected.length) {
             if (status) status.textContent = "Select at least one detail first.";
