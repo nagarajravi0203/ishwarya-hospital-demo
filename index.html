@@ -1447,7 +1447,7 @@
       V.fb = async () =>
         `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">★</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
       V.done = async () =>
-        `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p><div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>✓ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>✓ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>✓ A reminder is sent the day before your visit.</span></div>' : ""}</div><button class="btn p w" data-act="finish">Back to WhatsApp</button>`;
+        `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p><div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>✓ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>✓ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>✓ A reminder is sent the day before your visit.</span></div>' : ""}</div>`;
       const FM = {
         enq: {
           call: (d) => api.enquiry(d),
@@ -1516,6 +1516,16 @@
         if (msg) bot(msg, btns);
         else welcome();
       }
+      function completionMessage() {
+        if (LD.tpl === "appointment_confirmation")
+          return `? <strong>Appointment request received</strong><br>Reference: <strong>${LD.ref}</strong><br>Patient: ${esc(B.patientName)}<br>Date: ${new Date(B.date + "T00:00").toDateString()}<br>Time: ${fmt(B.slot)}<br><br>Our front desk will contact you shortly to confirm your appointment.`;
+        return `? ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We?ll remind you the day before your visit." : ""}`;
+      }
+      const returnOptions = [
+        ["bk", "Book another appointment"],
+        ["svc", "Explore Hospital Services"],
+        ["con", "Contact Hospital"],
+      ];
       wv.addEventListener("click", (e) => {
         const t = e.target.closest("[data-go],[data-act]");
         if (!t || t.disabled) return;
@@ -1533,8 +1543,11 @@
         if (k === "back") {
           stack.pop();
           stack.length ? paint() : closeWV();
-        } else if (k === "close") closeWV();
-        else if (k === "retry") paint();
+        } else if (k === "close") {
+          if (stack.at(-1)?.[0] === "done")
+            closeWV(completionMessage(), returnOptions);
+          else closeWV();
+        } else if (k === "retry") paint();
         else if (k === "filt") {
           DF = v;
           paint();
@@ -1566,16 +1579,6 @@
           const e = f.rating.closest(".f");
           e.classList.remove("bad");
           e.querySelector(".err").textContent = "";
-        } else if (k === "finish") {
-          const message =
-            LD.tpl === "appointment_confirmation"
-              ? `? <strong>Appointment request received</strong><br>Reference: <strong>${LD.ref}</strong><br>Patient: ${esc(B.patientName)}<br>Date: ${new Date(B.date + "T00:00").toDateString()}<br>Time: ${fmt(B.slot)}<br><br>Our front desk will contact you shortly to confirm your appointment.`
-              : `? ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We?ll remind you the day before your visit." : ""}`;
-          closeWV(message, [
-            ["bk", "Book another appointment"],
-            ["svc", "Explore Hospital Services"],
-            ["con", "Contact Hospital"],
-          ]);
         }
       });
       function readForm(f) {
