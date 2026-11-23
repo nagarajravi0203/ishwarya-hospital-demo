@@ -1,0 +1,1884 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>WIZE · WhatsApp hospital automation demo</title>
+    <style>
+      :root {
+        --bg: #eaf1ef;
+        --card: #fff;
+        --ink: #12302c;
+        --mute: #5b706c;
+        --line: #e1eae8;
+        --t: #0d7a6b;
+        --t2: #10b981;
+        --soft: #e7f6f2;
+        --on: #fff;
+        --warn: #b42318;
+        --chat: #efeae2;
+        --in: #fff;
+        --out: #d9fdd3;
+        --bar: #0b5f53;
+        --wv: #f5faf9;
+        --code: #0d1b19;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0c1514;
+          --card: #15211f;
+          --ink: #e4efed;
+          --mute: #92a8a4;
+          --line: #243532;
+          --t: #3ec7ae;
+          --t2: #34d399;
+          --soft: #12332e;
+          --on: #04201b;
+          --warn: #f97066;
+          --chat: #0b1412;
+          --in: #1f2c29;
+          --out: #144d37;
+          --bar: #13342f;
+          --wv: #0f1a18;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0c1514;
+        --card: #15211f;
+        --ink: #e4efed;
+        --mute: #92a8a4;
+        --line: #243532;
+        --t: #3ec7ae;
+        --t2: #34d399;
+        --soft: #12332e;
+        --on: #04201b;
+        --warn: #f97066;
+        --chat: #0b1412;
+        --in: #1f2c29;
+        --out: #144d37;
+        --bar: #13342f;
+        --wv: #0f1a18;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.5 system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--t2);
+        outline-offset: 1px;
+      }
+      .wrap {
+        max-width: 432px;
+        margin: 0 auto;
+        padding: 16px 20px 24px;
+        display: block;
+      }
+      .side {
+        display: none;
+      }
+      .side h1 {
+        font:
+          700 clamp(1.8rem, 3.6vw, 2.7rem)/1.12 Georgia,
+          "Iowan Old Style",
+          serif;
+        margin: 8px 0 12px;
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 1.25rem;
+        color: var(--t);
+        letter-spacing: 0.02em;
+      }
+      .logo b {
+        color: var(--t2);
+      }
+      .side p {
+        color: var(--mute);
+        max-width: 58ch;
+        margin: 0 0 10px;
+      }
+      .side h3 {
+        margin: 22px 0 8px;
+        font-size: 0.98rem;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .box {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 0.85rem;
+        color: var(--mute);
+      }
+      .box b {
+        color: var(--ink);
+        display: block;
+        margin-bottom: 4px;
+      }
+      #log {
+        background: #0d1b19;
+        color: #bfe9df;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font:
+          12px/1.5 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+        height: 170px;
+        overflow: auto;
+      }
+      #log div {
+        margin-bottom: 2px;
+        word-break: break-word;
+      }
+      #log b {
+        color: #6ee7b7;
+      }
+      #log b.er {
+        color: #fda4af;
+      }
+      #log b.wa {
+        color: #fcd34d;
+      }
+      .lc {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--mute);
+        margin: 8px 0;
+      }
+      .lc button {
+        background: none;
+        border: 0;
+        color: var(--t);
+        font-weight: 600;
+      }
+      #sx {
+        width: 100%;
+        padding: 9px 10px;
+        border-radius: 10px;
+        border: 1.5px solid var(--line);
+        background: var(--card);
+        color: var(--ink);
+        font: inherit;
+      }
+      #sr {
+        background: #0d1b19;
+        color: #bfe9df;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font:
+          11.5px/1.5 ui-monospace,
+          Menlo,
+          Consolas,
+          monospace;
+        max-height: 240px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin: 8px 0 4px;
+      }
+      details.fj pre {
+        background: #0d1b19;
+        color: #bfe9df;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 11px;
+        overflow: auto;
+        white-space: pre-wrap;
+      }
+      details.fj summary {
+        cursor: pointer;
+        color: var(--t);
+        font-weight: 600;
+      }
+      .phone {
+        position: sticky;
+        top: 16px;
+        height: min(740px, calc(100vh - 32px));
+        min-height: 560px;
+        border: 9px solid #1b2a28;
+        border-radius: 38px;
+        overflow: hidden;
+        background: var(--chat);
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 44px rgba(0, 0, 0, 0.22);
+      }
+      .top {
+        background: var(--bar);
+        color: #fff;
+        padding: 10px 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .top .a {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--t);
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 0.78rem;
+      }
+      .top small {
+        display: block;
+        opacity: 0.8;
+        font-size: 0.72rem;
+      }
+      .top b {
+        font-size: 0.95rem;
+      }
+      #chat {
+        flex: 1;
+        overflow: auto;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .day {
+        align-self: center;
+        background: var(--in);
+        font-size: 0.72rem;
+        color: var(--mute);
+        padding: 2px 10px;
+        border-radius: 8px;
+      }
+      .m {
+        max-width: 86%;
+        padding: 7px 10px 5px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+      }
+      .m.in {
+        background: var(--in);
+        align-self: flex-start;
+        border-top-left-radius: 2px;
+      }
+      .m.out {
+        background: var(--out);
+        align-self: flex-end;
+        border-top-right-radius: 2px;
+      }
+      .m em {
+        display: block;
+        text-align: right;
+        font-style: normal;
+        font-size: 0.66rem;
+        color: var(--mute);
+      }
+      .opts {
+        align-self: flex-start;
+        width: 86%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .opts button {
+        background: var(--in);
+        border: 0;
+        border-radius: 10px;
+        padding: 9px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        color: var(--t);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+      }
+      .bar {
+        background: var(--bar);
+        padding: 8px 10px;
+        display: flex;
+        gap: 8px;
+      }
+      .bar input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 14px;
+        font: inherit;
+        font-size: 0.9rem;
+        background: var(--in);
+        color: var(--ink);
+      }
+      .bar button {
+        border: 0;
+        border-radius: 50%;
+        width: 42px;
+        background: var(--t2);
+        color: var(--on);
+        font-size: 1.05rem;
+      }
+      .wv {
+        position: absolute;
+        inset: 0;
+        background: var(--wv);
+        display: flex;
+        flex-direction: column;
+        transform: translateY(102%);
+        transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .wv.open {
+        transform: none;
+      }
+      .wh {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        background: var(--card);
+        border-bottom: 1px solid var(--line);
+      }
+      .wh div {
+        flex: 1;
+        text-align: center;
+        line-height: 1.2;
+      }
+      .wh b {
+        font-size: 0.92rem;
+      }
+      .wh small {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--mute);
+      }
+      .wh button {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--soft);
+        color: var(--t);
+        font-size: 1.1rem;
+      }
+      #wb {
+        flex: 1;
+        overflow: auto;
+        padding: 14px 14px 24px;
+      }
+      #wb h2 {
+        margin: 4px 0;
+        font-size: 1.15rem;
+      }
+      #wb h3 {
+        margin: 14px 0 8px;
+        font-size: 0.95rem;
+      }
+      #wb p {
+        margin: 0 0 8px;
+      }
+      .sm {
+        font-size: 0.8rem;
+        color: var(--mute);
+      }
+      .c {
+        text-align: center;
+      }
+      .hero {
+        background: linear-gradient(135deg, var(--t), var(--t2));
+        color: #fff;
+        border-radius: 18px;
+        padding: 16px;
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .hero.c {
+        text-align: center;
+      }
+      .hero p {
+        opacity: 0.92;
+        font-size: 0.85rem;
+      }
+      .hero small {
+        opacity: 0.85;
+      }
+      .big {
+        font-size: 1.8rem;
+        font-style: normal;
+        display: block;
+      }
+      .badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.75rem;
+        margin-top: 6px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(13, 122, 107, 0.07);
+        text-align: left;
+        width: 100%;
+        display: block;
+      }
+      .card.c {
+        text-align: center;
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .tile {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(13, 122, 107, 0.07);
+        transition: transform 0.15s;
+      }
+      .tile:hover {
+        transform: translateY(-2px);
+      }
+      .tile i {
+        display: block;
+        font-style: normal;
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+        background: var(--soft);
+        width: 44px;
+        height: 44px;
+        line-height: 44px;
+        border-radius: 14px;
+        margin-inline: auto;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        background: none;
+        border: 0;
+        border-top: 1px solid var(--line);
+        padding: 11px 2px;
+        text-align: left;
+      }
+      .card.row {
+        border: 1px solid var(--line);
+        padding: 12px 14px;
+      }
+      .row u {
+        margin-left: auto;
+        text-decoration: none;
+        color: var(--mute);
+      }
+      .ic {
+        font-style: normal;
+        background: var(--soft);
+        border-radius: 12px;
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+      }
+      .li {
+        padding: 8px 0;
+        border-top: 1px solid var(--line);
+      }
+      .li:first-child {
+        border-top: 0;
+      }
+      .li b {
+        display: block;
+        font-size: 0.85rem;
+      }
+      .li span {
+        color: var(--mute);
+        font-size: 0.85rem;
+      }
+      .btn {
+        border-radius: 12px;
+        padding: 11px 14px;
+        font-weight: 600;
+        border: 1.5px solid var(--t);
+        background: transparent;
+        color: var(--t);
+      }
+      .btn.p {
+        background: var(--t);
+        color: var(--on);
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .w {
+        width: 100%;
+        margin-top: 6px;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .dc {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 12px;
+      }
+      .dc .two {
+        grid-column: 1/-1;
+        margin: 0;
+      }
+      .dc small,
+      .dc em {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--mute);
+        font-style: normal;
+      }
+      .dc em {
+        color: var(--t);
+        font-weight: 600;
+      }
+      .dc b {
+        display: block;
+      }
+      button.dc {
+        font: inherit;
+      }
+      .av {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          hsl(var(--h) 60% 32%),
+          hsl(calc(var(--h) + 30) 65% 42%)
+        );
+        overflow: hidden;
+      }
+      .av img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .av.lg {
+        width: 84px;
+        height: 84px;
+        font-size: 1.6rem;
+        margin: 0 auto 8px;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 2px 0 8px;
+      }
+      .chips.wrap {
+        flex-wrap: wrap;
+        overflow: visible;
+      }
+      .chip {
+        border: 1.5px solid var(--line);
+        background: var(--card);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+      .chip.on {
+        background: var(--t);
+        border-color: var(--t);
+        color: var(--on);
+      }
+      .chip.dt {
+        border-radius: 14px;
+        text-align: center;
+        min-width: 52px;
+      }
+      .chip.dt small {
+        display: block;
+        font-size: 0.68rem;
+      }
+      .chip:disabled {
+        opacity: 0.4;
+        text-decoration: line-through;
+      }
+      .slots {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .slots .chip {
+        padding: 9px 4px;
+      }
+      .stp {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 4px;
+      }
+      .stp i {
+        flex: 1;
+        height: 5px;
+        border-radius: 3px;
+        background: var(--line);
+      }
+      .stp i.on {
+        background: var(--t2);
+      }
+      .f {
+        display: block;
+        margin-bottom: 10px;
+      }
+      .f > span {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .f input,
+      .f select,
+      .f textarea {
+        width: 100%;
+        font: inherit;
+        padding: 10px 12px;
+        border: 1.5px solid var(--line);
+        border-radius: 12px;
+        background: var(--card);
+        color: var(--ink);
+      }
+      .f.bad input,
+      .f.bad select,
+      .f.bad textarea {
+        border-color: var(--warn);
+      }
+      .err {
+        color: var(--warn);
+        font-size: 0.75rem;
+        display: block;
+        min-height: 0;
+      }
+      .ban {
+        background: #fee4e2;
+        color: #912018;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+      }
+      .ban[hidden] {
+        display: none;
+      }
+      .stars button {
+        background: none;
+        border: 0;
+        font-size: 2rem;
+        color: var(--line);
+        padding: 0 2px;
+      }
+      .stars button.on {
+        color: #f5b301;
+      }
+      details {
+        border-top: 1px solid var(--line);
+        padding: 8px 0;
+      }
+      details:first-child {
+        border-top: 0;
+      }
+      summary {
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .ok {
+        color: var(--t2);
+      }
+      .ok svg {
+        animation: pop 0.5s;
+      }
+      .ref {
+        background: var(--soft);
+        border-radius: 10px;
+        padding: 6px;
+        margin-top: 8px;
+        font-size: 0.85rem;
+      }
+      .sk {
+        height: 84px;
+        border-radius: 16px;
+        margin-bottom: 10px;
+        background: linear-gradient(
+          90deg,
+          var(--line),
+          var(--card),
+          var(--line)
+        );
+        background-size: 200% 100%;
+        animation: sh 1.2s infinite;
+      }
+      @keyframes sh {
+        to {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0.6);
+          opacity: 0;
+        }
+      }
+      @media (max-width: 900px) {
+        .wrap {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .phone {
+          order: -1;
+          position: relative;
+          top: 0;
+          margin: 0 auto;
+          width: 100%;
+          max-width: 392px;
+        }
+      }
+      @media (max-width: 480px) {
+        .wrap {
+          padding: 0;
+        }
+        .side {
+          padding: 0 18px;
+        }
+        .phone {
+          border: 0;
+          border-radius: 0;
+          height: 100dvh;
+          max-width: none;
+        }
+        .cols {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Standalone Vercel launch: show the hospital web app, not the chat simulator. */
+      body.hosted-launch .wrap {
+        max-width: 760px;
+        min-height: 100dvh;
+        padding: 0;
+      }
+      body.hosted-launch .phone {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-width: none;
+        height: 100dvh;
+        min-height: 100dvh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      body.hosted-launch .top,
+      body.hosted-launch #chat,
+      body.hosted-launch .bar {
+        display: none;
+      }
+      body.hosted-launch .wv {
+        position: relative;
+        inset: auto;
+        flex: 1;
+        transform: none;
+        transition: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="side">
+        <div class="logo">WI<b>ZE</b></div>
+        <h1>Smarter Patient Communication. Simplified Hospital Operations.</h1>
+        <p>
+          WIZE is a WhatsApp-based hospital automation platform, not just a
+          chatbot. Patients start with a short WhatsApp chat, then move into a
+          rich hospital app for services, doctors, appointments, maternity,
+          diagnostics, enquiries and feedback. Try it on the phone.
+        </p>
+        <h3>What is real and what is simulated</h3>
+        <div class="cols">
+          <div class="box">
+            <b>Real WhatsApp Cloud API</b>Reply buttons (max 3), CTA URL buttons
+            that open a hosted web app in WhatsApp’s in-app browser, native
+            WhatsApp Flows (JSON-defined, fixed components), webhooks and
+            template reminders.
+          </div>
+          <div class="box">
+            <b>Simulated in this demo</b>The WhatsApp chat frame. The hospital
+            app is a normal web page in a phone sheet (the CTA URL pattern), not
+            a native Flow. API data is mock until CFG.MOCK is set to false.
+          </div>
+        </div>
+        <h3>Live API &amp; WhatsApp activity</h3>
+        <div id="log" aria-live="polite"></div>
+        <div class="lc">
+          <label
+            ><input type="checkbox" id="fail" /> Simulate server error on
+            submit</label
+          ><button id="rs" type="button">Restart demo</button>
+        </div>
+        <h3>Sample API responses</h3>
+        <p>
+          Pick any endpoint to see the request and the JSON the backend returns.
+          The last three are WhatsApp Cloud API payloads.
+        </p>
+        <select id="sx" aria-label="Choose an endpoint"></select>
+        <pre id="sr" tabindex="0"></pre>
+        <details class="fj" style="margin-top: 12px">
+          <summary>Sample WhatsApp Flow JSON (enquiry)</summary>
+          <pre>
+{"version":"7.0","screens":[{"id":"ENQUIRY","title":"Patient enquiry","terminal":true,"layout":{"type":"SingleColumnLayout","children":[{"type":"Form","name":"form","children":[{"type":"TextInput","name":"patient","label":"Patient name","input-type":"text","required":true},{"type":"Dropdown","name":"dept","label":"Department","data-source":[{"id":"gyn","title":"Gynaecology"}]},{"type":"Footer","label":"Submit","on-click-action":{"name":"complete","payload":{"patient":"${form.patient}","dept":"${form.dept}"}}}]}]}}]}</pre
+          >
+        </details>
+      </section>
+      <div class="phone">
+        <div class="top">
+          <div class="a">ISH</div>
+          <div>
+            <b>Ishwarya Hospital ✔</b
+            ><small>Business account · Powered by WIZE</small>
+          </div>
+        </div>
+        <div id="chat" aria-live="polite"></div>
+        <form class="bar" id="cf" autocomplete="off">
+          <input
+            id="ci"
+            placeholder="Type a message"
+            aria-label="Type a message"
+          /><button aria-label="Send">➤</button>
+        </form>
+        <div class="wv" id="wv">
+          <div class="wh">
+            <button data-act="back" aria-label="Back">‹</button>
+            <div>
+              <b id="wt">Hospital services</b
+              ><small>🔒 ishwarya.wize.app</small>
+            </div>
+            <button data-act="close" aria-label="Close">✕</button>
+          </div>
+          <div id="wb"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Public API base URL only. Never put Meta credentials or signing secrets here.
+      window.HOSPITAL_DEMO_CONFIG = window.HOSPITAL_DEMO_CONFIG || {
+        API_BASE: "",
+        MOCK: false,
+      };
+    </script>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        pad = (n) => String(n).padStart(2, "0"),
+        sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
+        esc = (s) =>
+          String(s || "").replace(
+            /[&<>"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+          );
+      const fmt = (t) => {
+        const [h, m] = t.split(":");
+        return (h % 12 || 12) + ":" + m + (h < 12 ? " AM" : " PM");
+      };
+      /* ---------- Sample data (served by the mock API) ---------- */
+      const URL_PARAMS = new URLSearchParams(window.location.search);
+      const HOSTED_LAUNCH =
+        URL_PARAMS.get("intent") === "hospital-demo" &&
+        ["services", "appointment", "contact"].includes(
+          URL_PARAMS.get("action"),
+        );
+      if (HOSTED_LAUNCH) document.body.classList.add("hosted-launch");
+
+      // Set API_BASE in the config block below before production deployment.
+      // MOCK must remain false in production.
+      const CFG = {
+        BASE: window.HOSPITAL_DEMO_CONFIG?.API_BASE || "",
+        MOCK: window.HOSPITAL_DEMO_CONFIG?.MOCK === true,
+      };
+      const LINK_TOKEN = URL_PARAMS.get("token") || "";
+      const PROFILE = {
+        name: "Ishwarya Hospital",
+        tagline: "Women’s health & maternity care",
+        phone: "+91 00000 00000 (sample)",
+        address: "Sample address, to be provided by the hospital",
+        emergency: "Emergency desk (sample: 24×7)",
+      };
+      const DEPTS = [
+        { id: "gyn", name: "Gynaecology", icon: "🌸" },
+        { id: "mat", name: "Maternity", icon: "🤰" },
+        { id: "fm", name: "Fetal Medicine", icon: "🩺" },
+        { id: "inf", name: "Fertility Care", icon: "💠" },
+      ];
+      const DOCS = [
+        {
+          id: "d1",
+          name: "Dr. Meera Nair",
+          qual: "MBBS, MS (Obs & Gyn)",
+          spec: "Gynaecology & Obstetrics",
+          dept: "gyn",
+          exp: 18,
+          days: [1, 2, 3, 4, 5, 6],
+          timing: "Mon–Sat · 10:00–13:00, 17:00–19:00",
+          hue: 168,
+          bio: "Sample profile. Special interest in antenatal care and women’s health.",
+        },
+        {
+          id: "d2",
+          name: "Dr. Anita Rao",
+          qual: "MBBS, DGO, DNB",
+          spec: "Maternity & High-risk Pregnancy",
+          dept: "mat",
+          exp: 14,
+          days: [2, 4, 6],
+          timing: "Tue, Thu, Sat · 11:00–14:00",
+          hue: 200,
+          bio: "Sample profile. Supports expectant mothers from first visit to delivery.",
+        },
+        {
+          id: "d3",
+          name: "Dr. S. Priya",
+          qual: "MBBS, MD, Fellowship (Fetal Medicine)",
+          spec: "Fetal Medicine",
+          dept: "fm",
+          exp: 11,
+          days: [1, 3, 5],
+          timing: "Mon, Wed, Fri · 16:00–19:00",
+          hue: 330,
+          bio: "Sample profile. Anomaly scans and fetal wellbeing assessments.",
+        },
+        {
+          id: "d4",
+          name: "Dr. R. Lakshmi",
+          qual: "MBBS, MS, Reproductive Medicine",
+          spec: "Fertility Care",
+          dept: "inf",
+          exp: 9,
+          days: [1, 3, 5],
+          timing: "Mon, Wed, Fri · 10:00–13:00",
+          hue: 25,
+          bio: "Sample profile. Counselling and care for couples planning a family.",
+        },
+      ];
+      const SV = [
+        {
+          id: "info",
+          t: "Hospital Info",
+          i: "🏥",
+          r: "svc",
+          s: "A women’s health and maternity centre (sample overview).",
+          it: [
+            [
+              "About us",
+              "Care for women and families through every stage of life.",
+            ],
+            [
+              "Departments",
+              "Gynaecology, Maternity, Fetal Medicine, Fertility Care.",
+            ],
+            [
+              "Patient support",
+              "Enquiries and appointments handled on WhatsApp.",
+            ],
+          ],
+        },
+        { id: "docs", t: "Doctors", i: "👩‍⚕️", r: "docs" },
+        {
+          id: "gyn",
+          t: "Gynaecology",
+          i: "🌸",
+          r: "svc",
+          s: "Women’s health consultations and treatment.",
+          it: [
+            ["Consultations", "Routine and specialist gynaecology visits."],
+            ["Health check-ups", "Preventive screening and counselling."],
+            ["Procedures", "Explained by your doctor at consultation."],
+          ],
+        },
+        {
+          id: "mat",
+          t: "Maternity",
+          i: "🤰",
+          r: "mat",
+          s: "Care from the first scan to postnatal recovery.",
+          it: [
+            [
+              "Antenatal care",
+              "Regular check-ups, scans and guidance through pregnancy.",
+            ],
+            [
+              "Pregnancy consultation",
+              "Meet an obstetrician to plan your care.",
+            ],
+            ["Maternity services", "Delivery planning and postnatal support."],
+            [
+              "Labour room",
+              "Admission information and what to bring (sample).",
+            ],
+            ["Women’s healthcare", "Care before, during and after pregnancy."],
+          ],
+        },
+        { id: "lab", t: "Lab & Tests", i: "🧪", r: "dx" },
+        {
+          id: "em",
+          t: "Emergency",
+          i: "🚑",
+          r: "svc",
+          s: "Urgent care for women and expectant mothers.",
+          it: [
+            ["Emergency desk", "Sample: staffed round the clock."],
+            [
+              "In an emergency",
+              "Call the hospital or come to the emergency entrance.",
+            ],
+          ],
+        },
+        {
+          id: "fac",
+          t: "Facilities",
+          i: "🛏️",
+          r: "svc",
+          s: "Sample list of hospital facilities.",
+          it: [
+            ["Inpatient rooms", "Sample: single and shared rooms."],
+            ["Pharmacy", "Sample: in-house pharmacy."],
+            ["Parking & access", "To be provided by the hospital."],
+          ],
+        },
+        {
+          id: "vis",
+          t: "Visiting Hours",
+          i: "🕒",
+          r: "svc",
+          s: "When you can visit patients.",
+          it: [
+            ["Visiting hours", "Sample: 11:00–13:00 and 17:00–19:00."],
+            ["Outpatient timings", "See each doctor’s profile."],
+            ["Maternity ward", "Visitor limits may apply (sample)."],
+          ],
+        },
+        {
+          id: "con",
+          t: "Contact",
+          i: "📍",
+          r: "svc",
+          s: "Reach the hospital team.",
+          it: [
+            ["Reception", "Sample: 08:00–20:00 daily."],
+            ["WhatsApp", "Message us any time in this chat."],
+          ],
+        },
+      ];
+      const DX = {
+        note: "Sample list for demonstration. Availability, preparation and pricing will be confirmed by the hospital.",
+        categories: [
+          {
+            name: "Blood tests",
+            tests: [
+              "Complete blood count",
+              "Blood group & Rh",
+              "Glucose tolerance",
+              "Thyroid profile",
+            ],
+          },
+          {
+            name: "Urine & infection screening",
+            tests: ["Urine routine", "Urine culture"],
+          },
+          {
+            name: "Imaging",
+            tests: ["Ultrasound", "Anomaly scan", "Growth scan"],
+          },
+          {
+            name: "Hormone & fertility panels",
+            tests: ["Hormone panel", "Semen analysis"],
+          },
+        ],
+      };
+      /* ---------- Mock backend (swap for real fetch by setting CFG.MOCK=false) ---------- */
+      function route(m, p, b) {
+        const u = new URL(p, "http://x"),
+          q = u.searchParams,
+          path = u.pathname,
+          ok = (d) => ({ status: 200, body: d }),
+          bad = (s, e) => ({ status: s, body: { error: e } });
+        let x;
+        if (m !== "GET" && $("#fail").checked)
+          return bad(503, "Service unavailable");
+        if (path === "/api/hospital/profile") return ok(PROFILE);
+        if (path === "/api/hospital/departments") return ok(DEPTS);
+        if (path === "/api/hospital/services") return ok(SV);
+        if (path === "/api/diagnostics") return ok(DX);
+        if ((x = path.match(/^\/api\/doctors\/(\w+)$/))) {
+          const d = DOCS.find((d) => d.id === x[1]);
+          return d ? ok(d) : bad(404, "Doctor not found");
+        }
+        if (path === "/api/doctors")
+          return ok(
+            DOCS.filter((d) => !q.get("dept") || d.dept === q.get("dept")),
+          );
+        if (path === "/api/appointments/available-slots") {
+          const d = DOCS.find((d) => d.id === q.get("doctorId"));
+          if (!d) return bad(404, "Doctor not found");
+          const dt = new Date(q.get("date") + "T00:00"),
+            seed = [...(q.get("date") + d.id)].reduce(
+              (a, c) => a + c.charCodeAt(0),
+              0,
+            );
+          return ok({
+            date: q.get("date"),
+            slots: d.days.includes(dt.getDay())
+              ? [
+                  "09:30",
+                  "10:00",
+                  "10:30",
+                  "11:00",
+                  "11:30",
+                  "12:00",
+                  "17:00",
+                  "17:30",
+                  "18:00",
+                  "18:30",
+                ].map((t, i) => ({ time: t, available: (seed + i) % 3 !== 0 }))
+              : [],
+          });
+        }
+        const need = {
+          "/api/appointments": [
+            "doctorId",
+            "date",
+            "slot",
+            "patientName",
+            "phone",
+          ],
+          "/api/patient-enquiries": ["name", "phone", "category", "message"],
+          "/api/feedback": ["rating"],
+          "/api/patient/callback-request": ["name", "phone"],
+        }[path];
+        if (m === "POST" && need) {
+          if (need.some((k) => !b[k]))
+            return bad(422, "Missing required fields");
+          if (b.phone && !/^[6-9]\d{9}$/.test(b.phone))
+            return bad(422, "Invalid phone number");
+          return {
+            status: 201,
+            body: {
+              ref:
+                {
+                  "/api/appointments": "APT",
+                  "/api/patient-enquiries": "ENQ",
+                  "/api/feedback": "FDB",
+                  "/api/patient/callback-request": "CBR",
+                }[path] +
+                "-" +
+                (1000 + Math.floor(Math.random() * 9000)),
+              status: "received",
+            },
+          };
+        }
+        return bad(404, "Not found");
+      }
+      const lg = (h, t, c = "") => {
+        const l = $("#log");
+        l.insertAdjacentHTML(
+          "beforeend",
+          `<div><b class="${c}">${h}</b> ${esc(t)}</div>`,
+        );
+        l.scrollTop = l.scrollHeight;
+      };
+      async function req(m, p, b) {
+        const t0 = performance.now();
+        let st, body;
+        try {
+          if (CFG.MOCK) {
+            await sleep(300 + Math.random() * 300);
+            const r = route(m, p, b);
+            st = r.status;
+            body = r.body;
+          } else {
+            if (!CFG.BASE) {
+              throw new Error(
+                "Hospital API is not configured. Set HOSPITAL_DEMO_CONFIG.API_BASE before deployment.",
+              );
+            }
+            const headers = { "Content-Type": "application/json" };
+            if (LINK_TOKEN) headers.Authorization = `Bearer ${LINK_TOKEN}`;
+            const r = await fetch(CFG.BASE.replace(/\/$/, "") + p, {
+              method: m,
+              headers,
+              body: b ? JSON.stringify(b) : undefined,
+            });
+            st = r.status;
+            body = await r.json();
+          }
+        } catch (e) {
+          st = 0;
+          body = { error: "Network error" };
+        }
+        lg(
+          m,
+          `${p} → ${st} · ${Math.round(performance.now() - t0)}ms`,
+          st >= 400 || !st ? "er" : "",
+        );
+        if (st < 200 || st >= 300)
+          throw Object.assign(new Error(body.error || "Request failed"), {
+            status: st,
+          });
+        return body;
+      }
+      /* ---------- Centralised API service layer ---------- */
+      const api = {
+        profile: () => req("GET", "/api/hospital/profile"),
+        depts: () => req("GET", "/api/hospital/departments"),
+        services: () => req("GET", "/api/hospital/services"),
+        docs: (d) => req("GET", "/api/doctors" + (d ? "?dept=" + d : "")),
+        doc: (id) => req("GET", "/api/doctors/" + id),
+        slots: (id, d) =>
+          req(
+            "GET",
+            `/api/appointments/available-slots?doctorId=${id}&date=${d}`,
+          ),
+        book: (b) => req("POST", "/api/appointments", b),
+        enquiry: (b) => req("POST", "/api/patient-enquiries", b),
+        dx: () => req("GET", "/api/diagnostics"),
+        feedback: (b) => req("POST", "/api/feedback", b),
+        callback: (b) => req("POST", "/api/patient/callback-request", b),
+      };
+      /* ---------- UI helpers ---------- */
+      const av = (d, s = "") =>
+        `<div class="av ${s}" style="--h:${d.hue}">${
+          d.photo
+            ? `<img src="${d.photo}" alt="">`
+            : d.name
+                .replace("Dr. ", "")
+                .split(/[ .]+/)
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w[0])
+                .join("")
+        }</div>`;
+      const stp = (n) =>
+        `<div class="stp">${[0, 1, 2, 3, 4].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</div><p class="sm">Step ${n + 1} of 5 · ${["Department", "Doctor", "Date & time", "Patient details", "Confirm"][n]}</p>`;
+      const F = (n, l, t = "text", o = {}) =>
+        `<label class="f"><span>${l}${o.r ? " *" : ""}</span>${t === "select" ? `<select name="${n}" ${o.r ? "data-r" : ""}><option value="">Select…</option>${o.o.map((x) => `<option ${x === o.s ? "selected" : ""}>${x}</option>`).join("")}</select>` : t === "area" ? `<textarea name="${n}" rows="3" ${o.r ? "data-r" : ""} placeholder="${o.p || ""}"></textarea>` : `<input name="${n}" type="${t}" ${o.r ? "data-r" : ""} ${t === "tel" ? 'inputmode="numeric" maxlength="10"' : ""} placeholder="${o.p || ""}" value="${esc(o.v)}">`}<small class="err"></small></label>`;
+      const enqForm = (c = "", d = "") =>
+        `<form data-form="enq" novalidate>${F("name", "Patient name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("category", "Enquiry category", "select", { r: 1, o: ["General", "Maternity", "Gynaecology", "Diagnostics", "Appointments", "Other"], s: c })}${F("department", "Preferred department", "select", { o: [...DEPTS.map((x) => x.name), "Not sure"], s: d })}${F("message", "Enquiry", "area", { r: 1, p: "How can we help?" })}<div class="ban" hidden></div><button class="btn p w">Send enquiry</button></form>`;
+      /* ---------- Views ---------- */
+      const V = {},
+        TT = {
+          home: "Hospital services",
+          svc: "Details",
+          docs: "Doctors & specialists",
+          doc: "Doctor profile",
+          mat: "Maternity care",
+          dx: "Diagnostics",
+          enq: "Patient enquiry",
+          cb: "Request a callback",
+          fb: "Patient feedback",
+          done: "Submitted",
+          bk0: "Book appointment",
+          bk1: "Book appointment",
+          bk2: "Book appointment",
+          bk3: "Book appointment",
+          bk4: "Book appointment",
+        };
+      let B = {},
+        DF = "",
+        LD = {};
+      V.home = async () => {
+        const [p, s] = await Promise.all([api.profile(), api.services()]);
+        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">● ${p.emergency}</span></div><div class="tiles">${s.map((x) => `<button class="tile" data-go="${x.r}:${x.id}"><i>${x.i}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button class="row" data-go="bk0">📅 Book an appointment<u>›</u></button><button class="row" data-go="enq">💬 Send an enquiry<u>›</u></button><button class="row" data-go="fb">⭐ Share your feedback<u>›</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
+      };
+      V.svc = async (id) => {
+        const s = (await api.services()).find((x) => x.id === id),
+          p = id === "con" ? await api.profile() : null;
+        return `<div class="hero c"><i class="big">${s.i}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}<div class="two"><button class="btn p" data-go="bk0">Book appointment</button><button class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`;
+      };
+      V.docs = async () => {
+        const [d, ds] = await Promise.all([api.docs(DF), api.depts()]);
+        return (
+          `<div class="chips">${[{ id: "", name: "All" }, ...ds].map((x) => `<button class="chip ${x.id === DF ? "on" : ""}" data-act="filt:${x.id}">${x.name}</button>`).join("")}</div>` +
+          d
+            .map(
+              (x) =>
+                `<div class="card dc">${av(x)}<div><b>${x.name}</b><small>${x.qual}</small><em>${x.spec}</em><small>${x.exp} years · ${x.timing}</small></div><div class="two"><button class="btn" data-go="doc:${x.id}">View profile</button><button class="btn p" data-act="bookdoc:${x.id}">Book appointment</button></div></div>`,
+            )
+            .join("")
+        );
+      };
+      V.doc = async (id) => {
+        const d = await api.doc(id),
+          dn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        return `<div class="hero c">${av(d, "lg")}<h2>${d.name}</h2><p>${d.qual}</p><span class="badge">${d.spec}</span></div><div class="card"><div class="li"><b>Experience</b><span>${d.exp} years (sample)</span></div><div class="li"><b>Consultation timings</b><span>${d.timing}</span></div><div class="li"><b>Available days</b><span>${d.days.map((x) => dn[x]).join(", ")}</span></div></div><div class="card"><b>About</b><p class="sm">${d.bio}</p></div><button class="btn p w" data-act="bookdoc:${d.id}">Book appointment</button>`;
+      };
+      V.bk0 = async () => {
+        B = {};
+        const d = await api.depts();
+        return (
+          stp(0) +
+          `<h3>Select department</h3>` +
+          d
+            .map(
+              (x) =>
+                `<button class="card row" data-act="bdept:${x.id}"><i class="ic">${x.icon}</i><b>${x.name}</b><u>›</u></button>`,
+            )
+            .join("")
+        );
+      };
+      V.bk1 = async () => {
+        const d = await api.docs(B.dept);
+        return (
+          stp(1) +
+          `<h3>Select doctor</h3>` +
+          d
+            .map(
+              (x) =>
+                `<button class="card dc" data-act="bdoc:${x.id}">${av(x)}<div><b>${x.name}</b><em>${x.spec}</em><small>${x.timing}</small></div></button>`,
+            )
+            .join("")
+        );
+      };
+      V.bk2 = async () => {
+        const d = await api.doc(B.doc),
+          days = [...Array(8)].map((_, i) => {
+            const t = new Date();
+            t.setDate(t.getDate() + i + 1);
+            return t;
+          }),
+          ok = (t) => d.days.includes(t.getDay()),
+          iso = (t) =>
+            `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+        if (!B.date || !days.some((t) => iso(t) === B.date && ok(t)))
+          B.date = iso(days.find(ok));
+        const s = await api.slots(B.doc, B.date);
+        B.slot = null;
+        return (
+          stp(2) +
+          `<h3>${d.name}</h3><div class="chips">${days.map((t) => `<button class="chip dt ${iso(t) === B.date ? "on" : ""}" ${ok(t) ? "" : "disabled"} data-act="date:${iso(t)}"><small>${t.toLocaleDateString("en", { weekday: "short" })}</small>${t.getDate()}</button>`).join("")}</div><h3>Available time slots</h3><div class="slots">${s.slots.map((x) => `<button class="chip" ${x.available ? "" : "disabled"} data-act="slot:${x.time}">${fmt(x.time)}</button>`).join("")}</div><button class="btn p w" id="nx" disabled data-go="bk3">Continue</button>`
+        );
+      };
+      V.bk3 = async () =>
+        stp(3) +
+        `<form data-form="bk3" novalidate>${F("patientName", "Patient name", "text", { r: 1, p: "Full name", v: B.patientName })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile", v: B.phone })}${F("visitType", "Visit type", "select", { r: 1, o: ["New consultation", "Follow-up", "Antenatal check-up"], s: B.visitType })}<button class="btn p w">Review appointment</button></form>`;
+      V.bk4 = async () => {
+        const d = await api.doc(B.doc);
+        return (
+          stp(4) +
+          `<div class="card"><div class="li"><b>Doctor</b><span>${d.name} · ${d.spec}</span></div><div class="li"><b>Date</b><span>${new Date(B.date + "T00:00").toDateString()}</span></div><div class="li"><b>Time</b><span>${fmt(B.slot)}</span></div><div class="li"><b>Patient</b><span>${esc(B.patientName)}</span></div><div class="li"><b>Mobile</b><span>+91 ${B.phone}</span></div><div class="li"><b>Visit type</b><span>${B.visitType}</span></div></div><form data-form="bk4"><div class="ban" hidden></div><button class="btn p w">Confirm appointment</button></form>`
+        );
+      };
+      V.mat = async () => {
+        const s = (await api.services()).find((x) => x.id === "mat");
+        return `<div class="hero c"><i class="big">${s.i}</i><h2>Maternity care</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<details><summary>${a}</summary><p class="sm">${b}</p></details>`).join("")}</div><div class="card"><b>Maternity enquiry</b><p class="sm">General information only. Your doctor advises on your own care.</p>${enqForm("Maternity", "Maternity")}</div>`;
+      };
+      V.dx = async () => {
+        const d = await api.dx();
+        return (
+          `<div class="hero c"><i class="big">🧪</i><h2>Laboratory & diagnostics</h2><p>${d.note}</p></div>` +
+          d.categories
+            .map(
+              (c) =>
+                `<div class="card"><b>${c.name}</b><div class="chips wrap" style="margin-top:6px">${c.tests.map((t) => `<span class="chip">${t}</span>`).join("")}</div></div>`,
+            )
+            .join("") +
+          `<div class="two"><button class="btn p" data-go="cb">Request a callback</button><button class="btn" data-go="enq">Send enquiry</button></div>`
+        );
+      };
+      V.enq = async () => `<h3>Patient enquiry</h3>` + enqForm();
+      V.cb = async () =>
+        `<h3>Request a callback</h3><form data-form="cb" novalidate>${F("name", "Your name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("topic", "Callback about", "select", { o: ["Appointments", "Diagnostics", "Maternity", "General enquiry"] })}${F("preferredTime", "Preferred time", "select", { o: ["Morning (9–12)", "Afternoon (12–4)", "Evening (4–7)"] })}<div class="ban" hidden></div><button class="btn p w">Request callback</button></form>`;
+      V.fb = async () =>
+        `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">★</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
+      V.done = async () =>
+        `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p><div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>✓ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>✓ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>✓ A reminder is sent the day before your visit.</span></div>' : ""}</div><button class="btn p w" data-act="finish">Back to WhatsApp</button>`;
+      const FM = {
+        enq: {
+          call: (d) => api.enquiry(d),
+          t: "Enquiry received",
+          m: "Thank you. Our team will reply on WhatsApp shortly.",
+          tpl: "enquiry_acknowledgement",
+        },
+        cb: {
+          call: (d) => api.callback(d),
+          t: "Callback requested",
+          m: "A member of our team will call you back at your preferred time.",
+          tpl: "callback_confirmation",
+        },
+        fb: {
+          call: (d) => api.feedback(d),
+          t: "Thank you for your feedback",
+          m: "Your feedback has been shared with our care team.",
+          tpl: "feedback_thanks",
+        },
+        bk4: {
+          call: () =>
+            api.book({
+              doctorId: B.doc,
+              date: B.date,
+              slot: B.slot,
+              patientName: B.patientName,
+              phone: B.phone,
+              visitType: B.visitType,
+            }),
+          t: "Appointment requested",
+          m: "Our front desk will confirm your appointment shortly.",
+          tpl: "appointment_confirmation",
+          rem: 1,
+        },
+      };
+      /* ---------- Web app shell ---------- */
+      const wv = $("#wv"),
+        wb = $("#wb"),
+        chat = $("#chat");
+      let stack = [];
+      const SK =
+        '<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
+      async function paint() {
+        const [n, a] = stack.at(-1);
+        $("#wt").textContent = TT[n] || "Ishwarya Hospital";
+        wb.innerHTML = SK;
+        try {
+          wb.innerHTML = await V[n](a);
+          wb.scrollTop = 0;
+        } catch (e) {
+          wb.innerHTML = `<div class="card c"><i class="big">⚠️</i><b>Couldn’t load this page</b><p class="sm">${esc(e.message)}. Please try again.</p><button class="btn p" data-act="retry">Try again</button></div>`;
+        }
+      }
+      const nav = (n, a) => {
+        stack.push([n, a]);
+        paint();
+      };
+      function openWV(n, a) {
+        stack = [[n, a]];
+        wv.classList.add("open");
+        paint();
+      }
+      function closeWV(msg, btns) {
+        wv.classList.remove("open");
+        stack = [];
+        if (msg) bot(msg, btns);
+      }
+      wv.addEventListener("click", (e) => {
+        const t = e.target.closest("[data-go],[data-act]");
+        if (!t || t.disabled) return;
+        if (t.dataset.go) {
+          const i = t.dataset.go.indexOf(":");
+          return nav(
+            i < 0 ? t.dataset.go : t.dataset.go.slice(0, i),
+            i < 0 ? undefined : t.dataset.go.slice(i + 1),
+          );
+        }
+        const a = t.dataset.act,
+          i = a.indexOf(":"),
+          k = i < 0 ? a : a.slice(0, i),
+          v = i < 0 ? "" : a.slice(i + 1);
+        if (k === "back") {
+          stack.pop();
+          stack.length ? paint() : closeWV();
+        } else if (k === "close") closeWV();
+        else if (k === "retry") paint();
+        else if (k === "filt") {
+          DF = v;
+          paint();
+        } else if (k === "bookdoc") {
+          B = { doc: v };
+          nav("bk2");
+        } else if (k === "bdept") {
+          B.dept = v;
+          nav("bk1");
+        } else if (k === "bdoc") {
+          B.doc = v;
+          nav("bk2");
+        } else if (k === "date") {
+          B.date = v;
+          paint();
+        } else if (k === "slot") {
+          B.slot = v;
+          wb.querySelectorAll(".slots .chip").forEach((c) =>
+            c.classList.toggle("on", c === t),
+          );
+          $("#nx").disabled = false;
+        } else if (k === "tog") t.classList.toggle("on");
+        else if (k === "star") {
+          const f = t.closest("form");
+          f.rating.value = v;
+          f.querySelectorAll(".stars button").forEach((b, j) =>
+            b.classList.toggle("on", j < v),
+          );
+          const e = f.rating.closest(".f");
+          e.classList.remove("bad");
+          e.querySelector(".err").textContent = "";
+        } else if (k === "finish")
+          closeWV(
+            `✅ ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We’ll remind you the day before your visit." : ""}`,
+            [["svc", "Explore Hospital Services"]],
+          );
+      });
+      function readForm(f) {
+        let ok = true,
+          d = {};
+        f.querySelectorAll("[name]").forEach((el) => {
+          const v = el.value.trim();
+          let e = "";
+          if (el.hasAttribute("data-r") && !v)
+            e =
+              el.name === "rating"
+                ? "Please choose a rating"
+                : "This field is required";
+          else if (el.name === "phone" && !/^[6-9]\d{9}$/.test(v))
+            e = "Enter a valid 10-digit mobile number";
+          const w = el.closest(".f");
+          w.querySelector(".err").textContent = e;
+          w.classList.toggle("bad", !!e);
+          if (e) ok = false;
+          d[el.name] = v;
+        });
+        return ok ? d : null;
+      }
+      wb.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = e.target,
+          k = f.dataset.form,
+          d = readForm(f);
+        if (!d) return;
+        if (k === "bk3") {
+          Object.assign(B, d);
+          return nav("bk4");
+        }
+        if (k === "fb")
+          d.experience = [...f.querySelectorAll(".chip.on")].map(
+            (c) => c.textContent,
+          );
+        const btn = f.querySelector(".btn"),
+          ban = f.querySelector(".ban"),
+          lab = btn.textContent;
+        ban.hidden = true;
+        btn.disabled = true;
+        btn.textContent = "Submitting…";
+        try {
+          const c = FM[k],
+            r = await c.call(d);
+          LD = { ...c, ref: r.ref };
+          lg(
+            "API",
+            "Form saved by backend. WhatsApp acknowledgement is sent by the backend integration.",
+            "wa",
+          );
+          stack = [["done"]];
+          paint();
+        } catch (err) {
+          ban.hidden = false;
+          ban.textContent = `Couldn’t submit (${err.message}). Your details are kept. Please try again.`;
+          btn.disabled = false;
+          btn.textContent = lab;
+        }
+      });
+      /* ---------- WhatsApp chat simulation ---------- */
+      const now = () =>
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      function bub(c, h) {
+        chat.insertAdjacentHTML(
+          "beforeend",
+          `<div class="m ${c}">${h}<em>${now()}${c === "out" ? " ✓✓" : ""}</em></div>`,
+        );
+        chat.scrollTop = chat.scrollHeight;
+      }
+      function bot(h, btns) {
+        bub("in", h);
+        if (btns) {
+          const o = document.createElement("div");
+          o.className = "opts";
+          btns.forEach(([id, l]) => {
+            const b = document.createElement("button");
+            b.textContent = l;
+            b.onclick = () => pick(id, l);
+            o.appendChild(b);
+          });
+          chat.appendChild(o);
+          chat.scrollTop = chat.scrollHeight;
+        }
+      }
+      function pick(id, l) {
+        bub("out", l);
+        lg("WA ⇦", "webhook · button_reply " + id, "wa");
+        setTimeout(() => {
+          const action = { svc: "services", bk: "appointment", con: "contact" }[
+            id
+          ];
+          const target = new URL(window.location.href);
+          target.searchParams.set("intent", "hospital-demo");
+          target.searchParams.set("action", action);
+          target.searchParams.set("preview", "1");
+          lg("WA ⇨", "CTA URL → " + target.pathname + target.search, "wa");
+          if (id === "svc") openWV("home");
+          else if (id === "bk") openWV("bk0");
+          else openWV("svc", "con");
+        }, 450);
+      }
+      function welcome() {
+        bot(
+          "Hello! 👋 Welcome to <strong>Ishwarya Hospital</strong>.\n\nWe’re here to help you with hospital services, doctor information, appointments and patient enquiries.\n\nHow can we assist you today?",
+          [
+            ["svc", "Explore Hospital Services"],
+            ["bk", "Book an Appointment"],
+            ["con", "Contact Hospital"],
+          ],
+        );
+        lg(
+          "WA ⇨",
+          "intent: hospital demo · interactive reply-buttons (3)",
+          "wa",
+        );
+      }
+      const nd = (() => {
+        const t = new Date();
+        do t.setDate(t.getDate() + 1);
+        while (t.getDay() === 0);
+        return `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+      })();
+      const SM = [
+        ["GET", "/api/hospital/profile"],
+        ["GET", "/api/hospital/departments"],
+        ["GET", "/api/hospital/services"],
+        ["GET", "/api/doctors?dept=gyn"],
+        ["GET", "/api/doctors/d1"],
+        ["GET", "/api/appointments/available-slots?doctorId=d1&date=" + nd],
+        [
+          "POST",
+          "/api/appointments",
+          {
+            doctorId: "d1",
+            date: nd,
+            slot: "10:30",
+            patientName: "A. Kumar",
+            phone: "9876543210",
+            visitType: "New consultation",
+          },
+        ],
+        [
+          "POST",
+          "/api/patient-enquiries",
+          {
+            name: "A. Kumar",
+            phone: "9876543210",
+            category: "Maternity",
+            department: "Maternity",
+            message: "Please share antenatal care details.",
+          },
+        ],
+        ["GET", "/api/diagnostics"],
+        [
+          "POST",
+          "/api/feedback",
+          {
+            rating: "5",
+            experience: ["Doctor care", "Staff"],
+            feedback: "Very helpful team.",
+            suggestions: "",
+          },
+        ],
+        [
+          "POST",
+          "/api/patient/callback-request",
+          {
+            name: "A. Kumar",
+            phone: "9876543210",
+            topic: "Diagnostics",
+            preferredTime: "Morning (9–12)",
+          },
+        ],
+      ];
+      const WS = [
+        [
+          "WhatsApp ➜ outbound CTA URL button",
+          {
+            messaging_product: "whatsapp",
+            to: "91XXXXXXXXXX",
+            type: "interactive",
+            interactive: {
+              type: "cta_url",
+              body: { text: "Explore our hospital services" },
+              action: {
+                name: "cta_url",
+                parameters: {
+                  display_text: "Open hospital services",
+                  url: "https://ishwarya.wize.app/?t=SIGNED_TOKEN",
+                },
+              },
+            },
+          },
+        ],
+        [
+          "WhatsApp ⇦ inbound webhook (button reply)",
+          {
+            object: "whatsapp_business_account",
+            entry: [
+              {
+                changes: [
+                  {
+                    field: "messages",
+                    value: {
+                      messages: [
+                        {
+                          from: "91XXXXXXXXXX",
+                          type: "interactive",
+                          interactive: {
+                            type: "button_reply",
+                            button_reply: {
+                              id: "svc",
+                              title: "Explore Hospital Services",
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        [
+          "WhatsApp ⇦ Flow completion payload (nfm_reply)",
+          {
+            from: "91XXXXXXXXXX",
+            type: "interactive",
+            interactive: {
+              type: "nfm_reply",
+              nfm_reply: {
+                name: "flow",
+                body: "Sent",
+                response_json: JSON.stringify({
+                  flow_token: "FLOW_TOKEN",
+                  patient: "A. Kumar",
+                  dept: "gyn",
+                }),
+              },
+            },
+          },
+        ],
+      ];
+      const sx = $("#sx"),
+        sr = $("#sr");
+      sx.innerHTML =
+        SM.map(
+          (s, i) =>
+            `<option value="${i}">${s[0]} ${s[1].split("?")[0]}</option>`,
+        ).join("") +
+        WS.map((s, i) => `<option value="w${i}">${s[0]}</option>`).join("");
+      function showSample() {
+        const v = sx.value;
+        if (v[0] === "w") {
+          sr.textContent = JSON.stringify(WS[+v.slice(1)][1], null, 2);
+          return;
+        }
+        const [m, p, b] = SM[+v],
+          r = route(m, p, b || {});
+        sr.textContent =
+          `${m} ${p}\n` +
+          (b ? `Request body:\n${JSON.stringify(b, null, 2)}\n` : "") +
+          `\nResponse ${r.status}:\n${JSON.stringify(r.body, null, 2)}`;
+      }
+      sx.onchange = showSample;
+      showSample();
+      function start() {
+        chat.innerHTML =
+          '<div class="day">Today</div><div class="day">Send any message to start</div>';
+        wv.classList.remove("open");
+        stack = [];
+        $("#log").innerHTML = "";
+        $("#ci").value = "";
+      }
+      $("#cf").onsubmit = (e) => {
+        e.preventDefault();
+        const i = $("#ci"),
+          v = i.value.trim();
+        if (!v) return;
+        i.value = "";
+        bub("out", esc(v));
+        lg("WA ⇦", 'webhook · text message "' + v + '"', "wa");
+        const ty = document.createElement("div");
+        ty.className = "m in";
+        ty.textContent = "typing…";
+        chat.appendChild(ty);
+        chat.scrollTop = chat.scrollHeight;
+        setTimeout(() => {
+          ty.remove();
+          welcome();
+        }, 700);
+      };
+      $("#rs").onclick = start;
+      start();
+
+      // CTA URL opens this same index.html at the requested hospital section.
+      if (HOSTED_LAUNCH) {
+        const action = URL_PARAMS.get("action");
+        if (action === "services") openWV("home");
+        else if (action === "appointment") openWV("bk0");
+        else if (action === "contact") openWV("svc", "con");
+        lg("WEB", "hospital demo landing · " + action, "wa");
+      }
+    </script>
+  </body>
+</html>
