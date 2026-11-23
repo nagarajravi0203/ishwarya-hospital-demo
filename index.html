@@ -1341,15 +1341,16 @@
         };
       let B = {},
         DF = "",
-        LD = {};
+        LD = {},
+        RETURN_NOTE = "";
       V.home = async () => {
-        const [p, s] = await Promise.all([api.profile(), api.services()]);
-        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">● ${p.emergency}</span></div><div class="tiles">${s.map((x) => `<button class="tile" data-go="${x.r}:${x.id}"><i>${x.i}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button class="row" data-go="bk0">📅 Book an appointment<u>›</u></button><button class="row" data-go="enq">💬 Send an enquiry<u>›</u></button><button class="row" data-go="fb">⭐ Share your feedback<u>›</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
+        const [p, services] = await Promise.all([api.profile(), api.services()]);
+        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">&#9679; ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i>${x.i}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
       };
       V.svc = async (id) => {
         const s = (await api.services()).find((x) => x.id === id),
           p = id === "con" ? await api.profile() : null;
-        return `<div class="hero c"><i class="big">${s.i}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}<div class="two"><button class="btn p" data-go="bk0">Book appointment</button><button class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`;
+        return `<div class="hero c"><i class="big">${s.i}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${id === "info" ? `<div class="card"><b>Explore hospital support</b><div class="two"><button type="button" class="btn" data-go="docs">View doctors &amp; departments</button><button type="button" class="btn" data-go="enq">Contact patient support</button></div></div>` : ""}${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}<div class="two"><button type="button" class="btn p" data-go="bk0">Book appointment</button><button type="button" class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`;
       };
       V.docs = async () => {
         const [d, ds] = await Promise.all([api.docs(DF), api.depts()]);
@@ -1511,6 +1512,13 @@
         paint();
       }
       function closeWV(msg, btns) {
+        if (HOSTED_LAUNCH) {
+          if (msg) RETURN_NOTE = msg;
+          stack = [["home"]];
+          wv.classList.add("open");
+          paint();
+          return;
+        }
         wv.classList.remove("open");
         stack = [];
         if (msg) bot(msg, btns);
