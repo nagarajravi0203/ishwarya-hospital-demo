@@ -464,6 +464,11 @@
         font-style: normal;
         display: block;
       }
+      .big svg {
+        width: 36px;
+        height: 36px;
+        vertical-align: middle;
+      }
       .badge {
         display: inline-block;
         background: rgba(255, 255, 255, 0.2);
@@ -510,7 +515,7 @@
         place-items: center;
         font-style: normal;
         font-size: 1.5rem;
-        color: var(--t);
+        color: var(--icon-color, var(--t));
         margin-bottom: 4px;
         background: var(--soft);
         width: 44px;
@@ -1166,6 +1171,17 @@
           ],
         },
       ];
+      const SERVICE_ACCENTS = {
+        info: "#2563eb",
+        docs: "#7c3aed",
+        gyn: "#db2777",
+        mat: "#ea580c",
+        lab: "#0891b2",
+        em: "#dc2626",
+        fac: "#4f46e5",
+        vis: "#d97706",
+        con: "#059669",
+      };
       const SERVICE_ICONS = {
         info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5l8-3 8 3v16M9 21v-5h6v5M9 8h.01M15 8h.01M9 11h.01M15 11h.01"/></svg>`,
         docs: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M19 8v6M16 11h6"/></svg>`,
@@ -1402,12 +1418,17 @@
         RETURN_NOTE = "";
       V.home = async () => {
         const [p, services] = await Promise.all([api.profile(), api.services()]);
-        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i>${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
+        return `<div class="hero"><small>${p.tagline}</small><h2>${p.name}</h2><span class="badge">Emergency: ${p.emergency}</span></div>${RETURN_NOTE ? `<div class="card c"><b>Latest update</b><p>${RETURN_NOTE}</p></div>` : ""}<div class="tiles">${services.map((x) => `<button type="button" class="tile" data-go="${x.r}:${x.id}"><i style="--icon-color:${SERVICE_ACCENTS[x.id] || "#0d7a6b"}">${SERVICE_ICONS[x.id] || SERVICE_ICONS.info}</i>${x.t}</button>`).join("")}</div><div class="card"><b>Quick actions</b><button type="button" class="row" data-go="bk0">Book an appointment<u>&rsaquo;</u></button><button type="button" class="row" data-go="enq">Send an enquiry<u>&rsaquo;</u></button><button type="button" class="row" data-go="fb">Share your feedback<u>&rsaquo;</u></button></div><p class="sm c">Sample data for demonstration.</p>`;
       };
       V.svc = async (id) => {
         const s = (await api.services()).find((x) => x.id === id),
-          p = id === "con" ? await api.profile() : null;
-        return `<div class="hero c"><i class="big">${s.i}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${id === "info" ? `<div class="card"><b>Explore hospital support</b><div class="two"><button type="button" class="btn" data-go="docs">View doctors &amp; departments</button><button type="button" class="btn" data-go="enq">Contact patient support</button></div></div>` : ""}${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}<div class="two"><button type="button" class="btn p" data-go="bk0">Book appointment</button><button type="button" class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`;
+          p = id === "con" ? await api.profile() : null,
+          extra = {
+            fac: `<div class="card"><b>Explore room options</b><p class="sm">Choose a room type to see the sample facilities.</p><div class="chips"><button type="button" class="chip on" data-act="room:shared">Shared room</button><button type="button" class="chip" data-act="room:private">Private room</button></div><p id="room-info" class="sm">Shared room: shared accommodation, nursing support and access to the hospital pharmacy. Availability and charges are confirmed by the hospital.</p></div>`,
+            vis: `<div class="card"><b>Plan your visit</b><label class="f"><span>Ward</span><select id="visitWard"><option>General ward</option><option>Maternity ward</option><option>Intensive care unit</option></select></label><label class="f"><span>Visit date</span><input id="visitDate" type="date" value="${new Date().toISOString().slice(0, 10)}"></label><button type="button" class="btn p w" data-act="check-hours">Check visiting hours</button><p id="visit-result" class="sm" aria-live="polite">Choose a ward and date to check the sample visiting schedule.</p></div>`,
+            con: `<div class="card"><b>Quick contact tools</b><p class="sm">Copy these details to share with a family member.</p><div class="two"><button type="button" class="btn" data-act="copy-phone">Copy phone number</button><button type="button" class="btn" data-act="copy-address">Copy address</button></div><p id="contact-copy-status" class="sm" aria-live="polite"></p></div>`,
+          }[id] || "";
+        return `<div class="hero c"><i class="big" style="color:${SERVICE_ACCENTS[id] || "#ffffff"}">${SERVICE_ICONS[id] || "IH"}</i><h2>${s.t}</h2><p>${s.s}</p></div><div class="card">${s.it.map(([a, b]) => `<div class="li"><b>${a}</b><span>${b}</span></div>`).join("")}</div>${extra}${id === "info" ? `<div class="card"><b>Explore hospital support</b><div class="two"><button type="button" class="btn" data-go="docs">View doctors &amp; departments</button><button type="button" class="btn" data-go="enq">Contact patient support</button></div></div>` : ""}${p ? `<div class="card"><div class="li"><b>Phone</b><span>${p.phone}</span></div><div class="li"><b>Address</b><span>${p.address}</span></div></div>` : ""}<div class="two"><button type="button" class="btn p" data-go="bk0">Book appointment</button><button type="button" class="btn" data-go="${id === "con" ? "cb" : "enq"}">${id === "con" ? "Request callback" : "Ask a question"}</button></div>`;
       };
       V.docs = async () => {
         const [d, ds] = await Promise.all([api.docs(DF), api.depts()]);
@@ -1590,15 +1611,15 @@
       }
       function completionMessage() {
         if (LD.tpl === "appointment_confirmation")
-          return `? <strong>Appointment request received</strong><br>Reference: <strong>${LD.ref}</strong><br>Patient: ${esc(B.patientName)}<br>Date: ${new Date(B.date + "T00:00").toDateString()}<br>Time: ${fmt(B.slot)}<br><br>Our front desk will contact you shortly to confirm your appointment.`;
-        return `? ${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We?ll remind you the day before your visit." : ""}`;
+          return `<strong>Appointment request received</strong><br>Reference: <strong>${LD.ref}</strong><br>Patient: ${esc(B.patientName)}<br>Date: ${new Date(B.date + "T00:00").toDateString()}<br>Time: ${fmt(B.slot)}<br><br>Our front desk will contact you shortly to confirm your appointment.`;
+        return `${LD.t}. Reference <strong>${LD.ref}</strong>.${LD.rem ? " We will remind you the day before your visit." : ""}`;
       }
       const returnOptions = [
         ["bk", "Book another appointment"],
         ["svc", "Explore Hospital Services"],
         ["con", "Contact Hospital"],
       ];
-      wv.addEventListener("click", (e) => {
+      wv.addEventListener("click", async (e) => {
         const t = e.target.closest("[data-go],[data-act]");
         if (!t || t.disabled) return;
         if (t.dataset.go) {
@@ -1641,6 +1662,39 @@
             c.classList.toggle("on", c === t),
           );
           $("#nx").disabled = false;
+        } else if (k === "room") {
+          const privateRoom = v === "private";
+          wb.querySelectorAll('[data-act^="room:"]').forEach((button) =>
+            button.classList.toggle("on", button === t),
+          );
+          const info = wb.querySelector("#room-info");
+          if (info)
+            info.textContent = privateRoom
+              ? "Private room: a private patient room with family seating and nursing support. Availability and charges are confirmed by the hospital."
+              : "Shared room: shared accommodation, nursing support and access to the hospital pharmacy. Availability and charges are confirmed by the hospital.";
+        } else if (k === "check-hours") {
+          const ward = wb.querySelector("#visitWard")?.value || "General ward";
+          const date = wb.querySelector("#visitDate")?.value;
+          const result = wb.querySelector("#visit-result");
+          if (result) {
+            if (!date) result.textContent = "Choose a visit date first.";
+            else if (ward === "Intensive care unit")
+              result.textContent = "Please contact the care team before visiting the intensive care unit.";
+            else {
+              const day = new Date(date + "T12:00:00").toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" });
+              result.textContent = `${ward} visiting hours on ${day}: 11:00 AM to 1:00 PM and 5:00 PM to 7:00 PM. These sample hours may change; please confirm with the hospital.`;
+            }
+          }
+        } else if (k === "copy-phone" || k === "copy-address") {
+          const p = await api.profile();
+          const value = k === "copy-phone" ? p.phone : p.address;
+          const status = wb.querySelector("#contact-copy-status");
+          try {
+            await navigator.clipboard.writeText(value);
+            if (status) status.textContent = `${k === "copy-phone" ? "Phone number" : "Address"} copied.`;
+          } catch {
+            if (status) status.textContent = "Copy is unavailable in this browser. Select the details above to copy them.";
+          }
         } else if (k === "test") {
           const test = decodeURIComponent(v);
           if (DG_SELECTED.includes(test))
