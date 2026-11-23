@@ -619,7 +619,7 @@
         overflow-x: auto;
         padding: 2px 0 8px;
       }
-      .chips.wrap {
+      .chips.wrap-chips {
         flex-wrap: wrap;
         overflow: visible;
       }
@@ -1435,7 +1435,7 @@
           d.categories
             .map(
               (c) =>
-                `<div class="card"><b>${c.name}</b><div class="chips wrap" style="margin-top:6px">${c.tests.map((t) => `<span class="chip">${t}</span>`).join("")}</div></div>`,
+                `<div class="card"><b>${c.name}</b><div class="chips wrap-chips" style="margin-top:6px">${c.tests.map((t) => `<span class="chip">${t}</span>`).join("")}</div></div>`,
             )
             .join("") +
           `<div class="two"><button class="btn p" data-go="cb">Request a callback</button><button class="btn" data-go="enq">Send enquiry</button></div>`
@@ -1445,7 +1445,7 @@
       V.cb = async () =>
         `<h3>Request a callback</h3><form data-form="cb" novalidate>${F("name", "Your name", "text", { r: 1 })}${F("phone", "Mobile number", "tel", { r: 1, p: "10-digit mobile" })}${F("topic", "Callback about", "select", { o: ["Appointments", "Diagnostics", "Maternity", "General enquiry"] })}${F("preferredTime", "Preferred time", "select", { o: ["Morning (9–12)", "Afternoon (12–4)", "Evening (4–7)"] })}<div class="ban" hidden></div><button class="btn p w">Request callback</button></form>`;
       V.fb = async () =>
-        `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">★</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
+        `<h3>How was your visit?</h3><form data-form="fb" novalidate><div class="f"><span>Overall rating *</span><div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" aria-label="${n} stars" data-act="star:${n}">★</button>`).join("")}</div><input type="hidden" name="rating" data-r><small class="err"></small></div><div class="f"><span>Consultation experience</span><div class="chips wrap-chips">${["Doctor care", "Staff", "Cleanliness", "Waiting time", "Communication"].map((x) => `<button type="button" class="chip" data-act="tog">${x}</button>`).join("")}</div></div>${F("feedback", "Your feedback", "area", { p: "Tell us about your visit" })}${F("suggestions", "Suggestions", "area", { p: "How can we improve?" })}<div class="ban" hidden></div><button class="btn p w">Submit feedback</button></form>`;
       V.done = async () =>
         `<div class="card c"><div class="ok"><svg viewBox="0 0 52 52" width="64" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="3"/><path d="M15 27l8 8 14-16" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>${LD.t}</h2><p class="sm">${LD.m}</p><div class="ref">Reference <b>${LD.ref}</b></div></div><div class="card"><b>What happens next</b><div class="li"><span>✓ A confirmation is sent to your WhatsApp.</span></div><div class="li"><span>✓ Our team follows up if more detail is needed.</span></div>${LD.rem ? '<div class="li"><span>✓ A reminder is sent the day before your visit.</span></div>' : ""}</div>`;
       const FM = {
